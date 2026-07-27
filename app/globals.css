@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg: #090817;
-  --bg-2: #15102f;
+  --bg: #060615;
+  --bg-2: #111034;
   --gold: #f5c96d;
+  --gold-2: #ffe9a8;
   --pink: #ff3fb4;
   --cyan: #41e8ff;
   --text: #f8f5ff;
@@ -11,24 +13,68 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(circle at 20% 0%, rgba(255, 63, 180, .22), transparent 34%),
-    radial-gradient(circle at 85% 10%, rgba(65, 232, 255, .18), transparent 30%),
-    linear-gradient(135deg, var(--bg), var(--bg-2) 54%, #080711);
+    radial-gradient(circle at 12% -5%, rgba(255, 63, 180, .32), transparent 34%),
+    radial-gradient(circle at 86% 8%, rgba(65, 232, 255, .24), transparent 34%),
+    radial-gradient(circle at 50% 105%, rgba(245, 201, 109, .18), transparent 35%),
+    linear-gradient(135deg, var(--bg), var(--bg-2) 54%, #070613);
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
-a { color: inherit; }
+
+a { color: inherit; text-decoration: none; }
+button, input, select { font: inherit; }
+button { touch-action: manipulation; }
+img { max-width: 100%; display: block; }
+
+.show-title {
+  font-family: 'Bebas Neue', 'Montserrat', sans-serif;
+  letter-spacing: .035em;
+  line-height: .88;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.show-kicker {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+}
+
 .spotlight {
-  background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+  background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.045));
   border: 1px solid rgba(255,255,255,.16);
-  box-shadow: 0 24px 80px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.14);
+  box-shadow: 0 24px 80px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.14);
   backdrop-filter: blur(18px);
 }
+
 .gold-text { color: var(--gold); }
-.neon-ring { box-shadow: 0 0 0 1px rgba(245,201,109,.45), 0 0 30px rgba(255,63,180,.22); }
-button, input, select { font: inherit; }
+.neon-ring { box-shadow: 0 0 0 1px rgba(245,201,109,.45), 0 0 34px rgba(255,63,180,.24); }
+.gold-gradient { background: linear-gradient(92deg, #fff5cf, var(--gold), #ff9f43); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+.mobile-shell:first-child { padding-top: max(1.25rem, env(safe-area-inset-top)); }
+
+.contestant-card {
+  position: relative;
+  isolation: isolate;
+}
+.contestant-card::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 42%;
+  background: linear-gradient(180deg, transparent, rgba(5, 5, 18, .9));
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-shell { padding-left: 1rem; padding-right: 1rem; }
+  .show-title { letter-spacing: .02em; }
+}
