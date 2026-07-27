@@ -12,6 +12,9 @@ function Photo({ contestant, className }: { contestant: Contestant; className?: 
   return <img src={contestant.photo_url} alt={contestant.name} className={className} loading="lazy" onError={(e) => { e.currentTarget.src = `https://placehold.co/300x300/15102f/f5c96d?text=${encodeURIComponent(contestant.name)}`; }} />;
 }
 
+const inputShell = 'flex min-h-12 items-center gap-2.5 rounded-2xl border border-white/15 bg-black/30 px-3 py-2.5 shadow-inner shadow-black/20 focus-within:border-yellow-200/70 sm:px-4';
+const inputClass = 'min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-violet-100/35 sm:text-base';
+
 export default function PlayPage() {
   const [state, setState] = useState<State | null>(null);
   const [name, setName] = useState('');
@@ -62,36 +65,40 @@ export default function PlayPage() {
 
   if (!state) return <main className="grid min-h-screen place-items-center px-5">Cargando...</main>;
 
-  return <main className="mobile-shell safe-bottom mx-auto max-w-5xl px-4 py-5 sm:px-5 sm:py-10">
-    <a href="/" className="text-sm font-bold text-cyan-200">← Ver leaderboard</a>
+  return <main className="mobile-shell safe-bottom mx-auto max-w-4xl px-4 py-4 sm:px-5 sm:py-8">
+    <a href="/" className="text-sm font-bold text-cyan-200">← Ver dashboard</a>
 
-    <section className="mt-5 spotlight rounded-[1.75rem] p-5 sm:mt-8 sm:p-8">
-      <p className="show-kicker text-[10px] text-yellow-200 sm:text-sm">Participa</p>
-      <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Registra tus picks</h1>
-      <p className="mt-4 text-sm leading-6 text-violet-100/78 sm:text-base">Entra con tu nombre y correo, ordena a los habitantes de <b>primer eliminado</b> a <b>ganador/a</b> y envía una sola vez.</p>
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <label className="flex items-center gap-3 rounded-2xl border border-white/15 bg-black/30 px-4 py-3"><UserRound className="size-5 text-yellow-200"/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Tu nombre" className="min-w-0 flex-1 bg-transparent outline-none" /></label>
-        <label className="flex items-center gap-3 rounded-2xl border border-white/15 bg-black/30 px-4 py-3"><Mail className="size-5 text-yellow-200"/><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" type="email" className="min-w-0 flex-1 bg-transparent outline-none" /></label>
+    <section className="mt-4 spotlight rounded-[1.5rem] p-4 sm:mt-6 sm:rounded-[1.75rem] sm:p-6">
+      <div className="grid gap-4 lg:grid-cols-[.95fr_1.05fr] lg:items-end">
+        <div>
+          <p className="show-kicker text-[10px] text-yellow-200 sm:text-xs">Participa</p>
+          <h1 className="show-title mt-1 text-5xl gold-gradient sm:text-7xl">Registra tus picks</h1>
+          <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm">Ordena de <b>primer eliminado</b> a <b>ganador/a</b>. Se envía una sola vez por correo.</p>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <label className={inputShell}><UserRound className="h-4 w-4 shrink-0 text-yellow-200 sm:h-5 sm:w-5"/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Tu nombre" className={inputClass} /></label>
+          <label className={inputShell}><Mail className="h-4 w-4 shrink-0 text-yellow-200 sm:h-5 sm:w-5"/><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" type="email" className={inputClass} /></label>
+        </div>
       </div>
-      {existing && <div className="mt-5 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-4 text-sm font-bold text-emerald-100"><Lock className="size-5"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
-      {submittedEmail && !existing && <p className="mt-3 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
+      {existing && <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-3 text-xs font-bold text-emerald-100 sm:text-sm"><Lock className="h-4 w-4"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
+      {submittedEmail && !existing && <p className="mt-2 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
     </section>
 
-    <section className="mt-5 grid gap-3 sm:mt-8">
-      {ordered.map((c, i) => <div key={c.id} className="spotlight flex items-center gap-3 rounded-2xl p-2.5 sm:gap-4 sm:p-3">
-        <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-yellow-300 text-sm font-black text-slate-950 sm:size-10">{i + 1}</div>
-        <Photo contestant={c} className="size-14 shrink-0 rounded-xl object-cover sm:size-16" />
-        <div className="min-w-0 flex-1"><h2 className="truncate text-sm font-black sm:text-base">{c.name}</h2><p className="truncate text-xs text-violet-100/60 sm:text-sm">{c.handle}</p></div>
-        {!existing && <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <button aria-label={`Subir a ${c.name}`} onClick={() => move(i,-1)} className="grid size-10 place-items-center rounded-xl border border-white/15 bg-white/5 font-black active:scale-95 disabled:opacity-30" disabled={i === 0}>↑</button>
-          <button aria-label={`Bajar a ${c.name}`} onClick={() => move(i,1)} className="grid size-10 place-items-center rounded-xl border border-white/15 bg-white/5 font-black active:scale-95 disabled:opacity-30" disabled={i === ordered.length - 1}>↓</button>
+    <section className="mt-4 grid gap-2 sm:mt-6 sm:gap-2.5">
+      {ordered.map((c, i) => <div key={c.id} className="spotlight flex items-center gap-2 rounded-2xl p-2 sm:gap-3 sm:p-2.5">
+        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-yellow-300 text-xs font-black text-slate-950 sm:h-9 sm:w-9 sm:rounded-xl sm:text-sm">{i + 1}</div>
+        <Photo contestant={c} className="h-10 w-10 shrink-0 rounded-lg object-cover sm:h-12 sm:w-12 sm:rounded-xl" />
+        <div className="min-w-0 flex-1"><h2 className="truncate text-sm font-black sm:text-base">{c.name}</h2><p className="truncate text-[11px] text-violet-100/60 sm:text-xs">{c.handle}</p></div>
+        {!existing && <div className="flex shrink-0 items-center gap-1">
+          <button aria-label={`Subir a ${c.name}`} onClick={() => move(i,-1)} className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-sm font-black active:scale-95 disabled:opacity-30 sm:h-10 sm:w-10" disabled={i === 0}>↑</button>
+          <button aria-label={`Bajar a ${c.name}`} onClick={() => move(i,1)} className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-sm font-black active:scale-95 disabled:opacity-30 sm:h-10 sm:w-10" disabled={i === ordered.length - 1}>↓</button>
           <GripVertical className="hidden text-white/30 sm:block"/>
         </div>}
       </div>)}
     </section>
 
-    {!existing && <div className="sticky bottom-0 -mx-4 mt-4 bg-gradient-to-t from-[#070613] via-[#070613]/95 to-transparent px-4 pb-3 pt-5 sm:static sm:mx-0 sm:bg-none sm:p-0">
-      <button disabled={saving || !canSubmit} onClick={submit} className="w-full rounded-2xl bg-yellow-300 px-6 py-4 font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)] disabled:opacity-50">{saving ? 'Guardando...' : 'Enviar quiniela y bloquear'}</button>
+    {!existing && <div className="mt-4 rounded-[1.35rem] border border-white/10 bg-[#070613]/88 p-3 shadow-[0_-14px_40px_rgba(7,6,19,.5)] sm:bg-transparent sm:p-0 sm:shadow-none">
+      <button disabled={saving || !canSubmit} onClick={submit} className="w-full rounded-2xl bg-yellow-300 px-6 py-3.5 font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)] disabled:opacity-50">{saving ? 'Guardando...' : 'Enviar quiniela y bloquear'}</button>
       {!canSubmit && <p className="mt-2 text-center text-xs text-violet-100/60">Completa nombre y correo válido para enviar.</p>}
     </div>}
     {msg && <p className="mt-4 text-center text-sm font-bold text-cyan-100">{msg}</p>}

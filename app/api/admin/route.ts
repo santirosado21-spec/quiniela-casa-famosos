@@ -31,6 +31,18 @@ export async function POST(req: Request) {
     }, `data: set elimination ${parsed.position}`);
     return NextResponse.json({ ok: true });
   }
+  if (body.action === 'recordSundayElimination') {
+    const parsed = z.object({ contestantId: z.string() }).parse(body);
+    await updateState((state) => {
+      if (state.eliminations.some((e) => e.contestant_id === parsed.contestantId)) return state;
+      const nextPosition = Math.max(0, ...state.eliminations.map((e) => e.position)) + 1;
+      state.eliminations = state.eliminations.filter((e) => e.position !== nextPosition);
+      state.eliminations.push({ contestant_id: parsed.contestantId, position: nextPosition, eliminated_at: new Date().toISOString() });
+      state.eliminations.sort((a, b) => a.position - b.position);
+      return state;
+    }, 'data: record sunday elimination');
+    return NextResponse.json({ ok: true });
+  }
   if (body.action === 'resetEliminations') {
     await updateState((state) => { state.eliminations = []; return state; }, 'data: reset eliminations');
     return NextResponse.json({ ok: true });
