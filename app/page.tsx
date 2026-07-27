@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Trophy, Sparkles, Crown } from 'lucide-react';
 
 type Contestant = { id: string; name: string; handle: string; photo_url: string; bio: string; color: string };
-type User = { id: string; name: string; token: string };
+type User = { id: string; name: string; email?: string; token: string };
 type Pick = { user_id: string; order_ids: string[]; submitted_at: string };
 type Elim = { contestant_id: string; position: number };
 type State = { contestants: Contestant[]; users: User[]; picks: Pick[]; eliminations: Elim[] };
@@ -54,17 +54,19 @@ export default function Home() {
             <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La Casa de los Famosos</h1>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
+        <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
+          <a className="rounded-full bg-yellow-300 px-4 py-3 text-center text-sm font-black text-slate-950" href="/play">Participar</a>
           <a className="rounded-full border border-white/20 px-4 py-3 text-center text-sm font-bold hover:bg-white/10" href="/admin">Admin</a>
-          <a className="rounded-full bg-yellow-300 px-4 py-3 text-center text-sm font-black text-slate-950" href="#leaderboard">Ranking</a>
+          <a className="rounded-full border border-yellow-300/50 px-4 py-3 text-center text-sm font-black text-yellow-100" href="#leaderboard">Ranking</a>
         </div>
       </nav>
 
       <div className="grid gap-6 lg:grid-cols-[1.02fr_.98fr] lg:items-center">
         <div>
-          <p className="mb-4 inline-flex items-center rounded-full border border-pink-300/30 bg-pink-400/10 px-4 py-2 text-xs font-bold text-pink-100 sm:text-sm"><Sparkles className="mr-2 size-4"/> Links únicos · picks bloqueados</p>
+          <p className="mb-4 inline-flex items-center rounded-full border border-pink-300/30 bg-pink-400/10 px-4 py-2 text-xs font-bold text-pink-100 sm:text-sm"><Sparkles className="mr-2 size-4"/> Login con nombre y correo · picks bloqueados</p>
           <h2 className="show-title max-w-4xl text-[3.35rem] gold-gradient sm:text-8xl md:text-9xl">Predice la eliminación completa</h2>
-          <p className="mt-5 max-w-2xl text-sm font-medium leading-6 text-violet-100/82 sm:text-lg sm:leading-8">Acomoda a todos los habitantes una sola vez. El admin actualiza las eliminaciones reales y el ranking se recalcula en vivo.</p>
+          <p className="mt-5 max-w-2xl text-sm font-medium leading-6 text-violet-100/82 sm:text-lg sm:leading-8">Cada persona entra con su nombre y correo, acomoda a todos los habitantes una sola vez y queda bloqueada por correo.</p>
+          <a href="/play" className="mt-6 inline-flex rounded-2xl bg-yellow-300 px-6 py-4 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)]">Hacer mi quiniela</a>
         </div>
         <div className="spotlight hidden rounded-[1.75rem] p-3 neon-ring sm:block sm:p-5">
           <div className="grid grid-cols-3 gap-2 sm:gap-3">

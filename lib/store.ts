@@ -1,6 +1,6 @@
 import { contestants } from './contestants';
 
-export type User = { id: string; name: string; token: string; created_at: string };
+export type User = { id: string; name: string; email?: string; token: string; created_at: string };
 export type Pick = { user_id: string; order_ids: string[]; submitted_at: string };
 export type Elimination = { contestant_id: string; position: number; eliminated_at: string };
 export type PoolState = { contestants: typeof contestants; users: User[]; picks: Pick[]; eliminations: Elimination[] };

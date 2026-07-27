@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Copy, Plus, RefreshCw } from 'lucide-react';
 
 type Contestant = { id: string; name: string; photo_url: string };
-type User = { id: string; name: string; token: string };
+type User = { id: string; name: string; email?: string; token: string };
 type Pick = { user_id: string; order_ids: string[] };
 type Elim = { contestant_id: string; position: number };
 type State = { contestants: Contestant[]; users: User[]; picks: Pick[]; eliminations: Elim[] };
