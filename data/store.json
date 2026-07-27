@@ -121,7 +121,14 @@
       "color": "#41e8ff"
     }
   ],
-  "users": [],
+  "users": [
+    {
+      "id": "4ea391d3-5340-4211-816f-0bac7db557a9",
+      "name": "Demo Santiago",
+      "token": "hYcIas4CPdQS",
+      "created_at": "2026-07-27T22:27:02.325Z"
+    }
+  ],
   "picks": [],
   "eliminations": []
 }
