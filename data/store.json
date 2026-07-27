@@ -1,5 +1,126 @@
 {
-  "contestants": [],
+  "contestants": [
+    {
+      "id": "facundo",
+      "name": "Facundo",
+      "handle": "Conductor y comediante",
+      "photo_url": "https://placehold.co/600x750/24134f/f5c96d?text=Facundo",
+      "bio": "Humor ácido, experiencia en TV y alto potencial de conflicto estratégico.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "dalilah-polanco",
+      "name": "Dalílah Polanco",
+      "handle": "Actriz",
+      "photo_url": "https://placehold.co/600x750/3b1760/ffffff?text=Dalilah",
+      "bio": "Figura querida de la televisión mexicana con lectura social fuerte.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "aaron-mercury",
+      "name": "Aarón Mercury",
+      "handle": "Creador digital",
+      "photo_url": "https://placehold.co/600x750/102a5c/41e8ff?text=Aaron",
+      "bio": "Base joven y digital; puede mover votaciones fuera del público tradicional.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "alexis-ayala",
+      "name": "Alexis Ayala",
+      "handle": "Actor",
+      "photo_url": "https://placehold.co/600x750/2c234e/f5c96d?text=Alexis",
+      "bio": "Perfil veterano, competitivo y con narrativa de autoridad.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "mar-contreras",
+      "name": "Mar Contreras",
+      "handle": "Actriz y cantante",
+      "photo_url": "https://placehold.co/600x750/4b1640/ffffff?text=Mar",
+      "bio": "Carisma escénico y capacidad de conectar por emoción.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "olivia-collins",
+      "name": "Olivia Collins",
+      "handle": "Actriz",
+      "photo_url": "https://placehold.co/600x750/201949/f5c96d?text=Olivia",
+      "bio": "Trayectoria en televisión y potencial de alianza generacional.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "ninel-conde",
+      "name": "Ninel Conde",
+      "handle": "Cantante y actriz",
+      "photo_url": "https://placehold.co/600x750/5c0f4d/ffffff?text=Ninel",
+      "bio": "Celebridad de alto reconocimiento y fandom amplio.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "priscila-valverde",
+      "name": "Priscila Valverde",
+      "handle": "Modelo",
+      "photo_url": "https://placehold.co/600x750/102c44/41e8ff?text=Priscila",
+      "bio": "Perfil fresco con margen para sorprender en convivencia.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "shiky",
+      "name": "Shiky",
+      "handle": "Conductor",
+      "photo_url": "https://placehold.co/600x750/2b185f/f5c96d?text=Shiky",
+      "bio": "Humor, conversación y lectura de cámaras.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "elaine-haro",
+      "name": "Elaine Haro",
+      "handle": "Actriz y cantante",
+      "photo_url": "https://placehold.co/600x750/301b6a/ffffff?text=Elaine",
+      "bio": "Energía juvenil, música y presencia en redes.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "guana",
+      "name": "Guana",
+      "handle": "Actor y comediante",
+      "photo_url": "https://placehold.co/600x750/3b2360/f5c96d?text=Guana",
+      "bio": "Comedia, improvisación y convivencia ligera.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "aldo-de-nigris",
+      "name": "Aldo de Nigris",
+      "handle": "Creador / TV",
+      "photo_url": "https://placehold.co/600x750/18285c/41e8ff?text=Aldo",
+      "bio": "Apellido reconocido y fandom regiomontano.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "abelito",
+      "name": "Abelito",
+      "handle": "Creador digital",
+      "photo_url": "https://placehold.co/600x750/451744/ffffff?text=Abelito",
+      "bio": "Personalidad viral y narrativa de underdog.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "mariana-botas",
+      "name": "Mariana Botas",
+      "handle": "Actriz",
+      "photo_url": "https://placehold.co/600x750/28214e/f5c96d?text=Mariana",
+      "bio": "Nostalgia televisiva y conexión familiar.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "sergio-mayer-mori",
+      "name": "Sergio Mayer Mori",
+      "handle": "Actor y músico",
+      "photo_url": "https://placehold.co/600x750/0b3250/41e8ff?text=Sergio",
+      "bio": "Perfil polémico y musical con alto reconocimiento.",
+      "color": "#41e8ff"
+    }
+  ],
   "users": [],
   "picks": [],
   "eliminations": []
