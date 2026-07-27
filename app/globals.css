@@ -68,11 +68,12 @@ img { max-width: 100%; display: block; }
   content: '';
   position: absolute;
   inset: auto 0 0 0;
-  height: 42%;
-  background: linear-gradient(180deg, transparent, rgba(5, 5, 18, .9));
+  height: 50%;
+  background: linear-gradient(180deg, transparent, rgba(5, 5, 18, .96));
   z-index: 0;
   pointer-events: none;
 }
+.contestant-card p { color: #fff !important; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
 
 @media (max-width: 640px) {
   .mobile-shell { padding-left: 1rem; padding-right: 1rem; }
