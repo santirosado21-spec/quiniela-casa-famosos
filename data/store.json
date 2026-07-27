@@ -152,5 +152,11 @@
       "submitted_at": "2026-07-27T22:27:22.028Z"
     }
   ],
-  "eliminations": []
+  "eliminations": [
+    {
+      "contestant_id": "facundo",
+      "position": 1,
+      "eliminated_at": "2026-07-27T22:27:23.313Z"
+    }
+  ]
 }
