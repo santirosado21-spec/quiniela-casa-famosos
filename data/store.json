@@ -97,7 +97,34 @@
       "color": "#f5c96d"
     }
   ],
-  "users": [],
-  "picks": [],
+  "users": [
+    {
+      "id": "824ec52b-7947-4c5c-b544-05638e21c7ea",
+      "name": "QA Hermes",
+      "email": "qa-hermes-2026@example.com",
+      "token": "SgNHAjmXIGZW",
+      "created_at": "2026-07-27T23:05:28.570Z"
+    }
+  ],
+  "picks": [
+    {
+      "user_id": "824ec52b-7947-4c5c-b544-05638e21c7ea",
+      "order_ids": [
+        "ernesto-laguardia",
+        "karina-torres",
+        "ximena-herrera",
+        "aldo-rendon",
+        "moises-penaloza",
+        "cynthia-klitbo",
+        "yahir",
+        "flor-vigna",
+        "masad-altamimi",
+        "arantza-ruiz",
+        "ese-perez",
+        "fede-vigevani"
+      ],
+      "submitted_at": "2026-07-27T23:05:28.570Z"
+    }
+  ],
   "eliminations": []
 }
