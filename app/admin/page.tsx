@@ -19,6 +19,7 @@ function Stat({ label, value, icon: Icon }: { label: string; value: string | num
 }
 
 export default function AdminPage() {
+ const [username,setUsername]=useState('');
  const [password,setPassword]=useState('');
  const [name,setName]=useState('');
  const [selected,setSelected]=useState('');
@@ -26,7 +27,7 @@ export default function AdminPage() {
  const [msg,setMsg]=useState('');
  const load=()=>fetch('/api/state').then(r=>r.json()).then((next: State)=>{ setState(next); setSelected((prev)=> prev || next.contestants.find(c=>!next.eliminations.some(e=>e.contestant_id===c.id))?.id || ''); });
  useEffect(()=>{load()},[]);
- async function action(body: Record<string, unknown>) { setMsg(''); const res=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-password':password},body:JSON.stringify(body)}); const data=await res.json(); setMsg(res.ok?'OK':data.error); await load(); return data; }
+ async function action(body: Record<string, unknown>) { setMsg(''); const res=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-username':username,'x-admin-password':password},body:JSON.stringify(body)}); const data=await res.json(); setMsg(res.ok?'OK':data.error); await load(); return data; }
  const base= typeof window==='undefined'?'':window.location.origin;
  const dashboard = useMemo(()=> state ? buildLeaderboard(state) : null, [state]);
  const contestantById = useMemo(()=> new Map((state?.contestants || []).map(c=>[c.id,c])), [state]);
@@ -42,7 +43,10 @@ export default function AdminPage() {
         <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Control de quiniela</h1>
         <p className="mt-3 text-sm text-violet-100/70 sm:text-base">Registra al eliminado de cada domingo y el sistema recalcula automáticamente ganadores y perdedores.</p>
       </div>
-      <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="ADMIN_PASSWORD" type="password" className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-4 outline-none focus:border-cyan-200" />
+      <div className="grid gap-3">
+        <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="Usuario admin" autoComplete="username" className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-4 outline-none focus:border-cyan-200" />
+        <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Contraseña admin" type="password" autoComplete="current-password" className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-4 outline-none focus:border-cyan-200" />
+      </div>
     </div>
   </div>
 

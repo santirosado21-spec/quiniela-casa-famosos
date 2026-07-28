@@ -5,7 +5,15 @@ import { updateState } from '@/lib/store';
 import { contestants } from '@/lib/contestants';
 
 function isAdmin(req: Request) {
-  return Boolean(process.env.ADMIN_PASSWORD && req.headers.get('x-admin-password') === process.env.ADMIN_PASSWORD);
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
+
+  return Boolean(
+    username &&
+    password &&
+    req.headers.get('x-admin-username') === username &&
+    req.headers.get('x-admin-password') === password,
+  );
 }
 
 export async function POST(req: Request) {
