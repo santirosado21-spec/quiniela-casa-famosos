@@ -62,14 +62,17 @@ export default function Home() {
           <p className="mt-5 max-w-2xl text-sm font-medium leading-6 text-violet-100/82 sm:text-lg sm:leading-8">Cada domingo el admin registra quién salió y la quiniela recalcula en vivo quién va ganando, quién va perdiendo y qué picks se están acercando.</p>
           <a href="/play" className="mt-6 inline-flex rounded-2xl bg-yellow-300 px-6 py-4 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)]">Hacer mi quiniela</a>
         </div>
-        <div className="spotlight rounded-[1.75rem] p-4 neon-ring sm:p-5">
-          <div className="mb-4 grid grid-cols-2 gap-3">
+        <div className="spotlight overflow-hidden rounded-[1.75rem] p-3 neon-ring sm:p-4">
+          <div className="contestant-card overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/30">
+            <img src="/assets/quiniela-melissa-hero.jpg" alt="La quiniela de Melissa" className="aspect-[16/10] w-full object-cover" />
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-3">
             <Metric icon={TrendingUp} value={dashboard.winners[0]?.user.name || '—'} label="Va ganando" />
             <Metric icon={TrendingDown} value={dashboard.losers[0]?.user.name || '—'} label="Va perdiendo" />
             <Metric icon={Activity} value={`${dashboard.totalPicks}/${dashboard.totalUsers}`} label="Picks enviados" />
             <Metric icon={Skull} value={dashboard.totalEliminations} label="Eliminados" />
           </div>
-          {latest ? <div className="flex items-center gap-3 rounded-2xl border border-pink-300/20 bg-pink-300/10 p-3"><Photo contestant={latest} className="h-12 w-12 rounded-xl object-cover"/><div><p className="show-kicker text-[10px] text-pink-100">Última eliminación</p><p className="font-black">#{dashboard.latestElimination?.position} {latest.name}</p></div></div> : <div className="rounded-2xl border border-white/10 bg-white/[.045] p-4 text-sm text-violet-100/65">Aún no hay eliminados. El ranking empezará a moverse el primer domingo.</div>}
+          {latest ? <div className="mt-4 flex items-center gap-3 rounded-2xl border border-pink-300/20 bg-pink-300/10 p-3"><Photo contestant={latest} className="h-12 w-12 rounded-xl object-cover"/><div><p className="show-kicker text-[10px] text-pink-100">Última eliminación</p><p className="font-black">#{dashboard.latestElimination?.position} {latest.name}</p></div></div> : <div className="mt-4 rounded-2xl border border-white/10 bg-white/[.045] p-4 text-sm text-violet-100/65">Aún no hay eliminados. El ranking empezará a moverse el primer domingo.</div>}
         </div>
       </div>
     </section>
