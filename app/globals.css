@@ -8,8 +8,9 @@
   --gold-2: #ffe9a8;
   --pink: #ff3fb4;
   --cyan: #41e8ff;
-  --text: #f8f5ff;
-  --muted: #bdb2d8;
+  --text: #d7d7d7;
+  --muted: #d7d7d7;
+  --uniform-copy: #d7d7d7;
 }
 
 * { box-sizing: border-box; }
@@ -54,9 +55,9 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(18px);
 }
 
-.gold-text { color: var(--gold); }
+.gold-text { color: var(--uniform-copy); }
 .neon-ring { box-shadow: 0 0 0 1px rgba(245,201,109,.45), 0 0 34px rgba(255,63,180,.24); }
-.gold-gradient { background: linear-gradient(92deg, #fff5cf, var(--gold), #ff9f43); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.gold-gradient { background: none; -webkit-background-clip: initial; background-clip: initial; color: var(--uniform-copy); }
 .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 .mobile-shell:first-child { padding-top: max(1.25rem, env(safe-area-inset-top)); }
 
@@ -73,7 +74,24 @@ img { max-width: 100%; display: block; }
   z-index: 0;
   pointer-events: none;
 }
-.contestant-card p { color: #fff !important; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+.contestant-card p { color: var(--uniform-copy) !important; text-shadow: 0 1px 8px rgba(0,0,0,.9); }
+
+/* Uniform readable gray text across the app. */
+body,
+body :where(a, button, input, select, textarea, p, span, h1, h2, h3, h4, h5, h6, label, div, li, small, strong, b),
+body :where(svg) {
+  color: var(--uniform-copy) !important;
+}
+
+body :where(input::placeholder, textarea::placeholder) {
+  color: rgba(215, 215, 215, .62) !important;
+}
+
+body :where(.gold-gradient) {
+  color: var(--uniform-copy) !important;
+  background: none !important;
+  -webkit-text-fill-color: var(--uniform-copy) !important;
+}
 
 @media (max-width: 640px) {
   .mobile-shell { padding-left: 1rem; padding-right: 1rem; }
