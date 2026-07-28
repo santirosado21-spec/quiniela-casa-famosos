@@ -48,8 +48,9 @@ export default function Home() {
             <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La quiniela de Melissa</h1>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
           <a className="rounded-full bg-yellow-300 px-4 py-3 text-center text-sm font-black text-slate-950" href="/play">Participar</a>
+          <a className="rounded-full border border-white/20 px-4 py-3 text-center text-sm font-bold hover:bg-white/10" href="/integrantes">Integrantes</a>
           <a className="rounded-full border border-white/20 px-4 py-3 text-center text-sm font-bold hover:bg-white/10" href="/admin">Admin</a>
           <a className="rounded-full border border-yellow-300/50 px-4 py-3 text-center text-sm font-black text-yellow-100" href="#dashboard">Dashboard</a>
         </div>
