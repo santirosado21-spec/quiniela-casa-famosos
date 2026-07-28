@@ -8,9 +8,9 @@
   --gold-2: #ffe9a8;
   --pink: #ff3fb4;
   --cyan: #41e8ff;
-  --text: #d7d7d7;
-  --muted: #d7d7d7;
-  --uniform-copy: #d7d7d7;
+  --text: #b8b8b8;
+  --muted: #b8b8b8;
+  --uniform-copy: #b8b8b8;
 }
 
 * { box-sizing: border-box; }
@@ -84,7 +84,13 @@ body :where(svg) {
 }
 
 body :where(input::placeholder, textarea::placeholder) {
-  color: rgba(215, 215, 215, .62) !important;
+  color: rgba(184, 184, 184, .62) !important;
+}
+
+body :where(a.bg-yellow-300, button.bg-yellow-300) {
+  background: rgba(255, 255, 255, .08) !important;
+  border: 1px solid rgba(184, 184, 184, .32) !important;
+  box-shadow: none !important;
 }
 
 body :where(.gold-gradient) {
