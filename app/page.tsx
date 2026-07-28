@@ -45,7 +45,7 @@ export default function Home() {
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-yellow-300 text-slate-950 shadow-[0_0_28px_rgba(245,201,109,.42)]"><Crown /></div>
           <div>
             <p className="show-kicker text-[10px] text-cyan-200 sm:text-xs">Quiniela privada</p>
-            <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La Casa de los Famosos</h1>
+            <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La quiniela de Melissa</h1>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-2 sm:flex sm:gap-3">
