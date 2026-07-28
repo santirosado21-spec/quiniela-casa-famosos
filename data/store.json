@@ -1,44 +1,108 @@
 {
   "contestants": [
     {
-      "id": "ernesto-laguardia",
-      "name": "Ernesto Laguardia",
-      "handle": "Actor y conductor",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ernesto-laguardia",
-      "bio": "Primer habitante confirmado; trayectoria sólida en TV y debut en realities.",
+      "id": "aldo-rendon",
+      "name": "Aldo Rendón",
+      "handle": "Fashion Stylist",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/aldo-rendon",
+      "bio": "Stylist mexicano con presencia fuerte en moda y entretenimiento.",
       "color": "#f5c96d"
     },
     {
-      "id": "karina-torres",
-      "name": "Karina Torres",
-      "handle": "Conductora / creadora",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/karina-torres",
-      "bio": "De La Fiesta de los Famosos a habitante; llega con apoyo del público digital.",
+      "id": "mariana-ochoa",
+      "name": "Mariana Ochoa",
+      "handle": "Cantante y actriz",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/mariana-ochoa",
+      "bio": "Integrante de OV7; llega con trayectoria musical, televisiva y de realities.",
       "color": "#ff3fb4"
     },
     {
-      "id": "ximena-herrera",
-      "name": "Ximena Herrera",
-      "handle": "Actriz",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ximena-herrera",
-      "bio": "Actriz con más de dos décadas de carrera y debut en reality 24/7.",
+      "id": "luis-chaparro",
+      "name": "Luis Chaparro",
+      "handle": "Creador de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/luis-chaparro",
+      "bio": "Creador de contenido y periodista con narrativa directa y personalidad digital.",
       "color": "#41e8ff"
     },
     {
-      "id": "aldo-rendon",
-      "name": "Aldo Rendón",
-      "handle": "Stylist mexicano",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/aldo-rendon",
-      "bio": "Stylist viral con respaldo de figuras de moda y entretenimiento.",
+      "id": "gema-garoa",
+      "name": "Gema Garoa",
+      "handle": "Actriz y conductora",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/gema-garoa",
+      "bio": "Actriz y conductora que suma energía, carisma y experiencia frente a cámara.",
       "color": "#f5c96d"
     },
     {
-      "id": "moises-penaloza",
-      "name": "Moisés Peñaloza",
-      "handle": "Actor",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/moises-penaloza",
-      "bio": "Actor en ascenso, quinto confirmado de la cuarta temporada.",
+      "id": "yanet-garcia",
+      "name": "Yanet García",
+      "handle": "Actriz y Health Coach",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/yanet-garcia",
+      "bio": "Actriz, health coach y figura digital con gran reconocimiento público.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "memo-schutz",
+      "name": "Memo Schutz",
+      "handle": "Comentarista y conductor",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/memo-schutz",
+      "bio": "Comentarista y conductor con perfil competitivo y experiencia en medios.",
       "color": "#41e8ff"
+    },
+    {
+      "id": "brianda-deyanara",
+      "name": "Brianda Deyanara",
+      "handle": "Creadora de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/brianda-deyanara",
+      "bio": "Creadora de contenido con comunidad digital amplia y estilo extrovertido.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "fede-vigevani",
+      "name": "Fede Vigevani",
+      "handle": "Creador de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/fede-vigevani",
+      "bio": "Creador de contenido con una de las bases digitales más fuertes.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "ese-perez",
+      "name": "Ese Pérez",
+      "handle": "Creador de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ese-perez",
+      "bio": "Creador digital con narrativa de sorpresa y potencial de conversación.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "arantza-ruiz",
+      "name": "Arantza Ruiz",
+      "handle": "Actriz",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/arantza-ruiz",
+      "bio": "Actriz joven con carrera en pantalla y perfil fresco para la casa.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "masad-altamimi",
+      "name": "Masad Altamimi",
+      "handle": "Creador de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/masad-altamimi",
+      "bio": "Creador de contenido originario de Arabia; perfil diferente dentro del cast.",
+      "color": "#ff3fb4"
+    },
+    {
+      "id": "flor-vigna",
+      "name": "Flor Vigna",
+      "handle": "Actriz y cantante",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/flor-vigna",
+      "bio": "Argentina con experiencia en música, actuación, deporte y realities.",
+      "color": "#41e8ff"
+    },
+    {
+      "id": "yahir",
+      "name": "Yahir",
+      "handle": "Cantante",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/yahir",
+      "bio": "Cantante reconocido que entra para mostrar una faceta más personal.",
+      "color": "#f5c96d"
     },
     {
       "id": "cynthia-klitbo",
@@ -49,52 +113,36 @@
       "color": "#ff3fb4"
     },
     {
-      "id": "yahir",
-      "name": "Yahir Othón",
-      "handle": "Cantante y actor",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/yahir",
-      "bio": "Cantante reconocido que entra para mostrar una faceta más personal.",
-      "color": "#f5c96d"
-    },
-    {
-      "id": "flor-vigna",
-      "name": "Flor Vigna",
-      "handle": "Cantante / actriz / creadora",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/flor-vigna",
-      "bio": "Argentina con experiencia en música, actuación, deporte y realities.",
-      "color": "#ff3fb4"
-    },
-    {
-      "id": "masad-altamimi",
-      "name": "Masad Altamimi",
-      "handle": "Influencer",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/masad-altamimi",
-      "bio": "Influencer originario de Arabia; noveno habitante confirmado.",
+      "id": "moises-penaloza",
+      "name": "Moisés Peñaloza",
+      "handle": "Actor",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/moises-penaloza",
+      "bio": "Actor en ascenso con presencia televisiva y perfil competitivo.",
       "color": "#41e8ff"
     },
     {
-      "id": "arantza-ruiz",
-      "name": "Arantza Ruiz",
+      "id": "ximena-herrera",
+      "name": "Ximena Herrera",
       "handle": "Actriz",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/arantza-ruiz",
-      "bio": "Actriz joven, décima habitante confirmada tras pistas que causaron revuelo.",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ximena-herrera",
+      "bio": "Actriz con más de dos décadas de carrera y debut en reality 24/7.",
+      "color": "#f5c96d"
+    },
+    {
+      "id": "karina-torres",
+      "name": "Karina Torres",
+      "handle": "Creadora de contenido",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/karina-torres",
+      "bio": "De La Fiesta de los Famosos a habitante; llega con apoyo del público digital.",
       "color": "#ff3fb4"
     },
     {
-      "id": "ese-perez",
-      "name": "Ese Pérez",
-      "handle": "Influencer",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ese-perez",
-      "bio": "Onceavo habitante revelado; creador digital con narrativa de sorpresa.",
+      "id": "ernesto-laguardia",
+      "name": "Ernesto Laguardia",
+      "handle": "Actor",
+      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/ernesto-laguardia",
+      "bio": "Actor con trayectoria sólida en TV y debut en realities.",
       "color": "#41e8ff"
-    },
-    {
-      "id": "fede-vigevani",
-      "name": "Fede Vigevani",
-      "handle": "Creador digital",
-      "photo_url": "https://www.lacasadelosfamososmexico.tv/api/image/og/us/habitantes/fede-vigevani",
-      "bio": "Doceavo habitante confirmado; una de las bases digitales más fuertes.",
-      "color": "#f5c96d"
     }
   ],
   "users": [
