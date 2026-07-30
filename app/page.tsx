@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Trophy, Sparkles, Crown, Activity, Skull, TrendingDown, TrendingUp } from 'lucide-react';
+import { Trophy, Sparkles, Crown, Activity, Skull, TrendingDown, TrendingUp, UsersRound, CheckCircle2, Target } from 'lucide-react';
 import { buildLeaderboard } from '@/lib/scoring';
 
 type Contestant = { id: string; name: string; handle: string; photo_url: string; bio: string; color: string };
@@ -22,6 +22,19 @@ function Metric({ label, value, icon: Icon }: { label: string; value: string | n
   </div>;
 }
 
+function MobileMetric({ label, value, helper, icon: Icon }: { label: string; value: string | number; helper: string; icon: typeof Trophy }) {
+  return <div className="rounded-2xl border border-white/10 bg-white/[.055] p-3 shadow-inner shadow-white/5 sm:p-4">
+    <div className="flex items-start justify-between gap-2">
+      <div className="min-w-0">
+        <p className="text-[10px] font-black uppercase tracking-[.18em] text-violet-100/45">{label}</p>
+        <p className="mt-1 truncate text-2xl font-black text-yellow-200 sm:text-3xl">{value}</p>
+      </div>
+      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-yellow-300/15 text-yellow-200"><Icon className="h-4 w-4" /></div>
+    </div>
+    <p className="mt-2 text-[11px] font-semibold leading-4 text-violet-100/60 sm:text-xs">{helper}</p>
+  </div>;
+}
+
 export default function Home() {
   const [state, setState] = useState<State | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +50,11 @@ export default function Home() {
   if (!state || !dashboard) return null;
 
   const latest = dashboard.latestElimination ? contestantById.get(dashboard.latestElimination.contestant_id) : null;
+  const pendingPicks = Math.max(0, dashboard.totalUsers - dashboard.totalPicks);
+  const pickProgress = dashboard.totalUsers ? Math.round((dashboard.totalPicks / dashboard.totalUsers) * 100) : 0;
+  const nextEliminationPosition = Math.min(state.contestants.length, dashboard.totalEliminations + 1);
+  const leader = dashboard.winners[0];
+  const totalExact = dashboard.rows.reduce((total, row) => total + row.exact, 0);
 
   return <main>
     <section className="mobile-shell mx-auto max-w-7xl px-5 pb-8 pt-5 sm:pt-8 md:py-14">
@@ -81,6 +99,14 @@ export default function Home() {
 
     <section id="dashboard" className="mobile-shell mx-auto max-w-7xl px-5 py-8">
       <div className="mb-5 flex items-center gap-3"><Trophy className="text-yellow-300"/><h2 className="show-title text-5xl gold-gradient sm:text-6xl">Dashboard de ranking</h2></div>
+      <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <MobileMetric icon={UsersRound} value={dashboard.totalUsers} label="Jugadores" helper="Participantes registrados" />
+        <MobileMetric icon={CheckCircle2} value={dashboard.totalPicks} label="Confirmados" helper={`${pendingPicks} pendientes de enviar picks`} />
+        <MobileMetric icon={Activity} value={`${pickProgress}%`} label="Avance" helper="Porcentaje con quiniela enviada" />
+        <MobileMetric icon={Skull} value={`${dashboard.totalEliminations}/${state.contestants.length}`} label="Eliminados" helper={`${dashboard.remainingContestants} habitantes siguen vivos`} />
+        <MobileMetric icon={Target} value={`#${nextEliminationPosition}`} label="Siguiente" helper="Próxima posición a actualizar" />
+        <MobileMetric icon={Trophy} value={leader ? leader.score : '—'} label="Puntos líder" helper={leader ? `${leader.user.name} · ${leader.exact} exactas` : `${totalExact} exactas totales`} />
+      </div>
       <div className="grid gap-4 lg:grid-cols-[1.05fr_.95fr]">
         <div className="spotlight overflow-hidden rounded-[1.75rem]">
           {dashboard.rows.length ? dashboard.rows.map((row, i) => <div key={row.user.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-white/10 px-4 py-4 last:border-0 sm:px-5">
