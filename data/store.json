@@ -152,6 +152,13 @@
       "email": "santirosado21@gmail.com",
       "token": "CZmV_-3KllSh",
       "created_at": "2026-07-28T01:39:19.020Z"
+    },
+    {
+      "id": "9641c01b-9f60-4c34-becd-6178d039ed75",
+      "name": "Santiago  Rosado {🦂}",
+      "email": "santiago.rosado@icloud.com",
+      "token": "CYwUSpVkcv7b",
+      "created_at": "2026-07-30T02:40:00.241Z"
     }
   ],
   "picks": [
@@ -172,6 +179,30 @@
         "fede-vigevani"
       ],
       "submitted_at": "2026-07-28T01:39:19.020Z"
+    },
+    {
+      "user_id": "9641c01b-9f60-4c34-becd-6178d039ed75",
+      "order_ids": [
+        "aldo-rendon",
+        "mariana-ochoa",
+        "luis-chaparro",
+        "gema-garoa",
+        "yanet-garcia",
+        "memo-schutz",
+        "brianda-deyanara",
+        "fede-vigevani",
+        "ese-perez",
+        "arantza-ruiz",
+        "masad-altamimi",
+        "flor-vigna",
+        "yahir",
+        "cynthia-klitbo",
+        "moises-penaloza",
+        "ximena-herrera",
+        "karina-torres",
+        "ernesto-laguardia"
+      ],
+      "submitted_at": "2026-07-30T02:40:00.241Z"
     }
   ],
   "eliminations": []
