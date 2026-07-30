@@ -75,7 +75,7 @@ export default function PlayPage() {
         <div>
           <p className="show-kicker text-[10px] text-yellow-200 sm:text-xs">Participa</p>
           <h1 className="show-title mt-1 text-5xl gold-gradient sm:text-7xl">Registra tus picks</h1>
-          <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm">Ordena de <b>primer eliminado</b> a <b>ganador/a</b>. Se envía una sola vez por correo.</p>
+          <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm"><b>#1 es quien crees que sale primero.</b> El último número (#{contestants.length || 18}) es quien crees que gana la temporada. Se envía una sola vez por correo.</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           <label className={inputShell}><UserRound className="h-4 w-4 shrink-0 text-yellow-200 sm:h-5 sm:w-5"/><input value={name} onChange={e=>setName(e.target.value)} placeholder="Tu nombre" className={inputClass} /></label>
@@ -94,6 +94,9 @@ export default function PlayPage() {
     </section>
 
     <section className="mt-4 grid gap-2 sm:mt-6 sm:gap-2.5">
+      <div className="rounded-2xl border border-white/10 bg-white/[.045] p-3 text-xs font-bold leading-5 text-violet-100/75 sm:text-sm">
+        Ordena la lista así: <b>#1 = primer eliminado</b> · <b>#{contestants.length || 18} = ganador/a</b>.
+      </div>
       {ordered.map((c, i) => <div key={c.id} className="spotlight flex items-center gap-2 rounded-2xl p-2 sm:gap-3 sm:p-2.5">
         <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-yellow-300 text-xs font-black text-slate-950 sm:h-9 sm:w-9 sm:rounded-xl sm:text-sm">{i + 1}</div>
         <Photo contestant={c} className="h-10 w-10 shrink-0 rounded-lg object-cover sm:h-12 sm:w-12 sm:rounded-xl" />

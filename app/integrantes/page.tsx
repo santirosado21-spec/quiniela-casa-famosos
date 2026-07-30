@@ -13,7 +13,7 @@ const steps = [
   },
   {
     title: '3. Ordena a los habitantes',
-    body: 'Acomoda la lista desde el primer eliminado hasta quien crees que gana la temporada.',
+    body: 'Acomoda la lista así: #1 es quien crees que sale primero y el último número (#18) es quien crees que gana la temporada.',
     icon: UsersRound,
   },
   {
@@ -25,7 +25,7 @@ const steps = [
 
 const rules = [
   'Una quiniela por correo.',
-  'Orden: primer eliminado → ganador/a.',
+  'Orden: #1 = primer eliminado; #18/último = ganador/a.',
   '125 puntos por posición exacta.',
   '-12 puntos por cada lugar de diferencia.',
   'El admin registra eliminaciones cada domingo.',
