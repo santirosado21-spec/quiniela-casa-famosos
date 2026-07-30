@@ -1,4 +1,4 @@
-# La quiniela de Melissa
+# La quiniela de La Casa de los Famosos
 
 Fantasy pool responsive para predecir el orden completo de eliminación de La Casa de los Famosos.
 

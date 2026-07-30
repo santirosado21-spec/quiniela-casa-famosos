@@ -14,6 +14,7 @@ function Photo({ contestant, className }: { contestant: Contestant; className?: 
 
 const inputShell = 'flex min-h-12 items-center gap-2.5 rounded-2xl border border-white/15 bg-black/30 px-3 py-2.5 shadow-inner shadow-black/20 focus-within:border-yellow-200/70 sm:px-4';
 const inputClass = 'min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-violet-100/35 sm:text-base';
+const MONEY_POOL_URL = 'https://www.moneypool.mx/p/uL12NXA';
 
 export default function PlayPage() {
   const [state, setState] = useState<State | null>(null);
@@ -55,13 +56,14 @@ export default function PlayPage() {
       body: JSON.stringify({ name, email, orderIds: order }),
     });
     const data = await res.json();
-    setSubmittedEmail(email.trim());
-    setMsg(res.ok ? 'Quiniela enviada. Tus picks quedaron bloqueados con este correo.' : data.error);
+    setSubmittedEmail(res.ok ? email.trim() : '');
+    setMsg(res.ok ? 'Quiniela enviada. Ahora paga tu entrada en Money Pool para quedar confirmado.' : data.error);
     await load();
     setSaving(false);
   }
 
-  const canSubmit = name.trim().length >= 2 && /\S+@\S+\.\S+/.test(email) && order.length === contestants.length && !existing;
+  const hasContactInfo = name.trim().length >= 2 && /\S+@\S+\.\S+/.test(email);
+  const canSubmit = hasContactInfo && order.length === contestants.length && !existing;
 
   if (!state) return <main className="grid min-h-screen place-items-center px-5">Cargando...</main>;
 
@@ -81,6 +83,13 @@ export default function PlayPage() {
         </div>
       </div>
       {existing && <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-3 text-xs font-bold text-emerald-100 sm:text-sm"><Lock className="h-4 w-4"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
+      {hasContactInfo && <div className="mt-4 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 sm:p-4">
+        <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
+        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">Ya puedes abrir Money Pool para pagar tu entrada. El link aparece solo después de escribir nombre y correo válido.</p>
+        <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full justify-center rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950 sm:w-auto">
+          Pagar en Money Pool
+        </a>
+      </div>}
       {submittedEmail && !existing && <p className="mt-2 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
     </section>
 
@@ -101,6 +110,14 @@ export default function PlayPage() {
       <button disabled={saving || !canSubmit} onClick={submit} className="w-full rounded-2xl bg-yellow-300 px-6 py-3.5 font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)] disabled:opacity-50">{saving ? 'Guardando...' : 'Enviar quiniela y bloquear'}</button>
       {!canSubmit && <p className="mt-2 text-center text-xs text-violet-100/60">Completa nombre y correo válido para enviar.</p>}
     </div>}
-    {msg && <p className="mt-4 text-center text-sm font-bold text-cyan-100">{msg}</p>}
+    {msg && <div className="mt-4 rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4 text-center">
+      <p className="text-sm font-black text-emerald-100">{msg}</p>
+      {submittedEmail && <>
+        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm">Siguiente paso: abre Money Pool y paga tu entrada.</p>
+        <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full justify-center rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950 sm:w-auto">
+          Abrir Money Pool
+        </a>
+      </>}
+    </div>}
   </main>;
 }

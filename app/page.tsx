@@ -45,7 +45,7 @@ export default function Home() {
           <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-yellow-300 text-slate-950 shadow-[0_0_28px_rgba(245,201,109,.42)]"><Crown /></div>
           <div>
             <p className="show-kicker text-[10px] text-cyan-200 sm:text-xs">Quiniela privada</p>
-            <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La quiniela de Melissa</h1>
+            <h1 className="show-title text-2xl gold-gradient sm:text-3xl">La quiniela de La Casa de los Famosos</h1>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
@@ -65,7 +65,7 @@ export default function Home() {
         </div>
         <div className="spotlight overflow-hidden rounded-[1.75rem] p-3 neon-ring sm:p-4">
           <div className="contestant-card overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/30">
-            <img src="/assets/quiniela-melissa-hero.jpg" alt="La quiniela de Melissa" className="aspect-[16/10] w-full object-cover" />
+            <img src="/assets/quiniela-casa-famosos-hero.svg" alt="La quiniela de La Casa de los Famosos" className="aspect-[16/10] w-full object-cover" />
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Metric icon={TrendingUp} value={dashboard.winners[0]?.user.name || '—'} label="Va ganando" />

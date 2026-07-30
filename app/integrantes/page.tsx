@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle2, Mail, MousePointerClick, ShieldCheck, Trophy,
 const steps = [
   {
     title: '1. Entra a participar',
-    body: 'Abre el link de la quiniela y toca “Participar”. Si Melissa te mandó un link privado, entra desde ese link.',
+    body: 'Abre el link de la quiniela y toca “Participar”. Si te mandaron un link privado, entra desde ese link.',
     icon: MousePointerClick,
   },
   {
@@ -44,7 +44,7 @@ export default function IntegrantesOnboardingPage() {
         <div>
           <h1 className="show-title text-6xl gold-gradient sm:text-8xl">Cómo entrar a la quiniela</h1>
           <p className="mt-4 max-w-2xl text-sm font-medium leading-6 sm:text-base sm:leading-8">
-            Guía rápida para que cada integrante registre su predicción, entienda las reglas y sepa cómo se calcula el ranking de La quiniela de Melissa.
+            Guía rápida para que cada integrante registre su predicción, entienda las reglas y sepa cómo se calcula el ranking de La quiniela de La Casa de los Famosos.
           </p>
         </div>
         <div className="rounded-3xl border border-white/10 bg-black/25 p-5">
@@ -81,7 +81,7 @@ export default function IntegrantesOnboardingPage() {
         <h2 className="show-title text-4xl gold-gradient sm:text-5xl">Link para mandar</h2>
         <p className="mt-3 text-sm leading-6">Comparte este link con los integrantes para que vean el onboarding antes de hacer su quiniela:</p>
         <code className="mt-4 block overflow-x-auto rounded-2xl bg-black/30 p-4 text-sm">https://quiniela-casa-famosos.vercel.app/integrantes</code>
-        <a href="/play" className="mt-5 inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[.08] px-5 py-4 text-sm font-black">
+        <a href="/play" className="mt-4 inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/[.08] px-5 py-4 text-sm font-black">
           Ir a participar <ArrowRight className="h-4 w-4" />
         </a>
       </div>

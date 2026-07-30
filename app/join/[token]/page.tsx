@@ -7,6 +7,8 @@ type User = { id: string; name: string; token: string };
 type Pick = { user_id: string; order_ids: string[] };
 type State = { contestants: Contestant[]; users: User[]; picks: Pick[] };
 
+const MONEY_POOL_URL = 'https://www.moneypool.mx/p/uL12NXA';
+
 function Photo({ contestant, className }: { contestant: Contestant; className?: string }) {
   return <img src={contestant.photo_url} alt={contestant.name} className={className} loading="lazy" onError={(e) => { e.currentTarget.src = `https://placehold.co/300x300/15102f/f5c96d?text=${encodeURIComponent(contestant.name)}`; }} />;
 }
@@ -17,6 +19,7 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
   const [order, setOrder] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+  const [paymentReady, setPaymentReady] = useState(false);
 
   useEffect(() => { params.then(p => setToken(p.token)); }, [params]);
   useEffect(() => { fetch('/api/state').then(r => r.json()).then((s) => { setState(s); setOrder(s.contestants.map((c: Contestant) => c.id)); }); }, []);
@@ -38,7 +41,8 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
     setSaving(true); setMsg('');
     const res = await fetch('/api/picks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ token, orderIds: order })});
     const data = await res.json();
-    setMsg(res.ok ? 'Quiniela enviada. Tus picks quedaron bloqueados.' : data.error);
+    setPaymentReady(res.ok);
+    setMsg(res.ok ? 'Quiniela enviada. Tus picks quedaron bloqueados. Ahora paga tu entrada en Money Pool para quedar confirmado.' : data.error);
     setSaving(false);
   }
 
@@ -54,6 +58,13 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
       <p className="show-kicker text-[10px] text-yellow-200 sm:text-sm">Link privado</p>
       <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Hola, {user.name}</h1>
       <p className="mt-4 text-sm leading-6 text-violet-100/78 sm:text-base">Ordena de <b>primer eliminado</b> a <b>ganador/a</b>. En móvil usa los botones ↑ ↓. Solo puedes enviar una vez.</p>
+      {existing && <div className="mt-5 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-4">
+        <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
+        <p className="mt-2 text-sm leading-6 text-violet-100/80">Tus picks ya están enviados. Ahora paga tu entrada para quedar confirmado.</p>
+        <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950">
+          Pagar en Money Pool
+        </a>
+      </div>}
       {existing && <div className="mt-5 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-4 text-sm font-bold text-emerald-100"><Lock className="size-5"/> Tus picks ya están bloqueados.</div>}
     </div>
 
@@ -73,6 +84,11 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
     {!existing && <div className="sticky bottom-0 -mx-4 mt-4 bg-gradient-to-t from-[#070613] via-[#070613]/95 to-transparent px-4 pb-3 pt-5 sm:static sm:mx-0 sm:bg-none sm:p-0">
       <button disabled={saving} onClick={submit} className="w-full rounded-2xl bg-yellow-300 px-6 py-4 font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)] disabled:opacity-60">{saving ? 'Enviando...' : 'Enviar quiniela y bloquear'}</button>
     </div>}
-    {msg && <p className="mt-4 text-center text-sm font-bold text-cyan-100">{msg}</p>}
+    {msg && <div className="mt-4 rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4 text-center">
+      <p className="text-sm font-bold text-emerald-100">{msg}</p>
+      {paymentReady && <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950">
+        Abrir Money Pool
+      </a>}
+    </div>}
   </main>;
 }
