@@ -58,13 +58,13 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
       <p className="show-kicker text-[10px] text-yellow-200 sm:text-sm">Link privado</p>
       <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Hola, {user.name}</h1>
       <p className="mt-4 text-sm leading-6 text-violet-100/78 sm:text-base">Ordena de <b>primer eliminado</b> a <b>ganador/a</b>. En móvil usa los botones ↑ ↓. Solo puedes enviar una vez.</p>
-      {existing && <div className="mt-5 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-4">
+      <div className="mt-5 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
-        <p className="mt-2 text-sm leading-6 text-violet-100/80">Tus picks ya están enviados. Ahora paga tu entrada para quedar confirmado.</p>
+        <p className="mt-2 text-sm leading-6 text-violet-100/80">El link de pago está siempre disponible para pagar tu entrada cuando quieras.</p>
         <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950">
           Pagar en Money Pool
         </a>
-      </div>}
+      </div>
       {existing && <div className="mt-5 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-4 text-sm font-bold text-emerald-100"><Lock className="size-5"/> Tus picks ya están bloqueados.</div>}
     </div>
 

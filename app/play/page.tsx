@@ -83,13 +83,13 @@ export default function PlayPage() {
         </div>
       </div>
       {existing && <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-3 text-xs font-bold text-emerald-100 sm:text-sm"><Lock className="h-4 w-4"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
-      {hasContactInfo && <div className="mt-4 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 sm:p-4">
+      <div className="mt-4 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 sm:p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
-        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">Ya puedes abrir Money Pool para pagar tu entrada. El link aparece solo después de escribir nombre y correo válido.</p>
+        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">El link de pago queda siempre disponible para que puedas pagar tu entrada cuando quieras.</p>
         <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full justify-center rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950 sm:w-auto">
           Pagar en Money Pool
         </a>
-      </div>}
+      </div>
       {submittedEmail && !existing && <p className="mt-2 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
     </section>
 

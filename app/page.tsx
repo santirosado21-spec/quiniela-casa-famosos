@@ -64,8 +64,9 @@ export default function Home() {
           <a href="/play" className="mt-6 inline-flex rounded-2xl bg-yellow-300 px-6 py-4 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)]">Hacer mi quiniela</a>
         </div>
         <div className="spotlight overflow-hidden rounded-[1.75rem] p-3 neon-ring sm:p-4">
-          <div className="contestant-card overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/30">
-            <img src="/assets/quiniela-casa-famosos-hero.svg" alt="La quiniela de La Casa de los Famosos" className="aspect-[16/10] w-full object-cover" />
+          <div className="contestant-card rounded-[1.35rem] border border-white/10 bg-black/30 px-5 py-8 text-center sm:px-8 sm:py-12">
+            <p className="show-kicker text-[10px] text-cyan-200 sm:text-xs">Quiniela privada</p>
+            <h2 className="show-title mt-3 text-4xl gold-gradient sm:text-6xl">La quiniela de La Casa de los Famosos</h2>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Metric icon={TrendingUp} value={dashboard.winners[0]?.user.name || '—'} label="Va ganando" />
