@@ -85,7 +85,7 @@ export default function PlayPage() {
       {existing && <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-3 text-xs font-bold text-emerald-100 sm:text-sm"><Lock className="h-4 w-4"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
       <div className="mt-4 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 sm:p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
-        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">El link de pago queda siempre disponible para que puedas pagar tu entrada cuando quieras.</p>
+        <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">La entrada es de <b>$500 pesos</b>. Paga en Money Pool y manda tu comprobante a <b>melissamolch@gmail.com</b>.</p>
         <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full justify-center rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950 sm:w-auto">
           Pagar en Money Pool
         </a>
@@ -96,6 +96,9 @@ export default function PlayPage() {
     <section className="mt-4 grid gap-2 sm:mt-6 sm:gap-2.5">
       <div className="rounded-2xl border border-white/10 bg-white/[.045] p-3 text-xs font-bold leading-5 text-violet-100/75 sm:text-sm">
         Ordena la lista así: <b>#1 = primer eliminado</b> · <b>#{contestants.length || 18} = ganador/a</b>.
+      </div>
+      <div className="rounded-2xl border border-yellow-300/20 bg-yellow-300/[.08] p-3 text-xs font-bold leading-5 text-violet-100/75 sm:text-sm">
+        Premio: <b>1er lugar se lleva todo</b>. Si hay empate, se divide. <b>2º y 3º lugar recuperan su entrada</b>. No hay ganancia para organizadores; solo es para divertirnos.
       </div>
       {ordered.map((c, i) => <div key={c.id} className="spotlight flex items-center gap-2 rounded-2xl p-2 sm:gap-3 sm:p-2.5">
         <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-yellow-300 text-xs font-black text-slate-950 sm:h-9 sm:w-9 sm:rounded-xl sm:text-sm">{i + 1}</div>

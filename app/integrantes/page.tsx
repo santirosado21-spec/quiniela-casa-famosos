@@ -26,6 +26,10 @@ const steps = [
 const rules = [
   'Una quiniela por correo.',
   'Orden: #1 = primer eliminado; #18/último = ganador/a.',
+  'Entrada: $500 pesos; envía tu comprobante a melissamolch@gmail.com.',
+  'Premio: 1er lugar se lleva todo; si hay empate, se divide.',
+  '2º y 3º lugar recuperan su entrada.',
+  'No hay ganancia para organizadores; solo es para divertirnos.',
   '125 puntos por posición exacta.',
   '-12 puntos por cada lugar de diferencia.',
   'El admin registra eliminaciones cada domingo.',

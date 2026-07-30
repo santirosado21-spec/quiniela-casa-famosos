@@ -60,7 +60,7 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
       <p className="mt-4 text-sm leading-6 text-violet-100/78 sm:text-base"><b>#1 es quien crees que sale primero.</b> El último número (#{contestants.length || 18}) es quien crees que gana la temporada. En móvil usa los botones ↑ ↓. Solo puedes enviar una vez.</p>
       <div className="mt-5 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
-        <p className="mt-2 text-sm leading-6 text-violet-100/80">El link de pago está siempre disponible para pagar tu entrada cuando quieras.</p>
+        <p className="mt-2 text-sm leading-6 text-violet-100/80">La entrada es de <b>$500 pesos</b>. Paga en Money Pool y manda tu comprobante a <b>melissamolch@gmail.com</b>.</p>
         <a href={MONEY_POOL_URL} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex rounded-2xl bg-yellow-300 px-5 py-3 text-sm font-black text-slate-950">
           Pagar en Money Pool
         </a>
@@ -71,6 +71,9 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
     <div className="mt-5 grid gap-3 sm:mt-8">
       <div className="rounded-2xl border border-white/10 bg-white/[.045] p-3 text-xs font-bold leading-5 text-violet-100/75 sm:text-sm">
         Ordena la lista así: <b>#1 = primer eliminado</b> · <b>#{contestants.length || 18} = ganador/a</b>.
+      </div>
+      <div className="rounded-2xl border border-yellow-300/20 bg-yellow-300/[.08] p-3 text-xs font-bold leading-5 text-violet-100/75 sm:text-sm">
+        Premio: <b>1er lugar se lleva todo</b>. Si hay empate, se divide. <b>2º y 3º lugar recuperan su entrada</b>. No hay ganancia para organizadores; solo es para divertirnos.
       </div>
       {list.map((c, i) => <div key={c.id} className="spotlight flex items-center gap-3 rounded-2xl p-2.5 sm:gap-4 sm:p-3">
         <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-yellow-300 text-sm font-black text-slate-950 sm:size-10">{i + 1}</div>
