@@ -145,7 +145,40 @@
       "color": "#41e8ff"
     }
   ],
-  "users": [],
-  "picks": [],
+  "users": [
+    {
+      "id": "b378c383-3670-4f0b-bd83-53556cd775ed",
+      "name": "Melissamoch",
+      "email": "melissamoch@gmail.com",
+      "token": "QFkxsJxV-g7u",
+      "created_at": "2026-08-01T02:59:45.502Z"
+    }
+  ],
+  "picks": [
+    {
+      "user_id": "b378c383-3670-4f0b-bd83-53556cd775ed",
+      "order_ids": [
+        "ximena-herrera",
+        "luis-chaparro",
+        "arantza-ruiz",
+        "yanet-garcia",
+        "ese-perez",
+        "masad-altamimi",
+        "mariana-ochoa",
+        "flor-vigna",
+        "brianda-deyanara",
+        "fede-vigevani",
+        "moises-penaloza",
+        "cynthia-klitbo",
+        "ernesto-laguardia",
+        "yahir",
+        "karina-torres",
+        "gema-garoa",
+        "memo-schutz",
+        "aldo-rendon"
+      ],
+      "submitted_at": "2026-08-01T02:59:45.502Z"
+    }
+  ],
   "eliminations": []
 }
