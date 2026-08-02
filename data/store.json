@@ -159,6 +159,13 @@
       "email": "annettedg@gmail.com",
       "token": "VU6FZhImYwy-",
       "created_at": "2026-08-02T01:35:27.802Z"
+    },
+    {
+      "id": "c231ca19-1cba-45fe-94a4-f4c5242bcab5",
+      "name": "Paty",
+      "email": "patyreynoso78@gmail.com",
+      "token": "b0PDa9Acy42A",
+      "created_at": "2026-08-02T02:34:57.367Z"
     }
   ],
   "picks": [
@@ -209,6 +216,30 @@
         "aldo-rendon"
       ],
       "submitted_at": "2026-08-02T01:35:27.802Z"
+    },
+    {
+      "user_id": "c231ca19-1cba-45fe-94a4-f4c5242bcab5",
+      "order_ids": [
+        "yanet-garcia",
+        "arantza-ruiz",
+        "mariana-ochoa",
+        "ximena-herrera",
+        "moises-penaloza",
+        "masad-altamimi",
+        "cynthia-klitbo",
+        "ernesto-laguardia",
+        "flor-vigna",
+        "luis-chaparro",
+        "brianda-deyanara",
+        "gema-garoa",
+        "ese-perez",
+        "memo-schutz",
+        "yahir",
+        "karina-torres",
+        "aldo-rendon",
+        "fede-vigevani"
+      ],
+      "submitted_at": "2026-08-02T02:34:57.367Z"
     }
   ],
   "eliminations": []
