@@ -3,9 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Lock, GripVertical } from 'lucide-react';
 
 type Contestant = { id: string; name: string; handle: string; photo_url: string; bio: string };
-type User = { id: string; name: string; token: string };
 type Pick = { user_id: string; order_ids: string[] };
-type State = { contestants: Contestant[]; users: User[]; picks: Pick[] };
+type State = { contestants: Contestant[]; user: { id: string; name: string }; pick: Pick | null };
 
 const MONEY_POOL_URL = 'https://www.moneypool.mx/p/uL12NXA';
 
@@ -22,10 +21,18 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
   const [paymentReady, setPaymentReady] = useState(false);
 
   useEffect(() => { params.then(p => setToken(p.token)); }, [params]);
-  useEffect(() => { fetch('/api/state').then(r => r.json()).then((s) => { setState(s); setOrder(s.contestants.map((c: Contestant) => c.id)); }); }, []);
+  useEffect(() => {
+    if (!token) return;
+    fetch(`/api/join/${encodeURIComponent(token)}`).then(async r => {
+      if (!r.ok) { setState(null); setMsg('Link inválido.'); return; }
+      const next: State = await r.json();
+      setState(next);
+      setOrder(next.contestants.map((c) => c.id));
+    });
+  }, [token]);
 
-  const user = state?.users.find(u => u.token === token);
-  const existing = user ? state?.picks.find(p => p.user_id === user.id) : undefined;
+  const user = state?.user;
+  const existing = state?.pick || undefined;
   const contestants = useMemo(() => state?.contestants ?? [], [state]);
   const ordered = order.map(id => contestants.find(c => c.id === id)).filter(Boolean) as Contestant[];
 
@@ -38,16 +45,33 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
   }
 
   async function submit() {
-    setSaving(true); setMsg('');
-    const res = await fetch('/api/picks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ token, orderIds: order })});
-    const data = await res.json();
-    setPaymentReady(res.ok);
-    setMsg(res.ok ? 'Quiniela enviada. Tus picks quedaron bloqueados. Ahora paga tu entrada en Money Pool para quedar confirmado.' : data.error);
-    setSaving(false);
+    setSaving(true);
+    setMsg('');
+    setPaymentReady(false);
+
+    try {
+      const res = await fetch('/api/picks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, orderIds: order }),
+      });
+      const data: { error?: string } = await res.json();
+
+      if (!res.ok) {
+        setMsg(data.error || 'No se pudo enviar la quiniela. Inténtalo de nuevo.');
+        return;
+      }
+
+      setPaymentReady(true);
+      setMsg('Quiniela enviada. Tus picks quedaron bloqueados. Ahora paga tu entrada en Money Pool para quedar confirmado.');
+    } catch {
+      setMsg('No se pudo completar el envío. Revisa tu conexión e inténtalo de nuevo.');
+    } finally {
+      setSaving(false);
+    }
   }
 
-  if (!state) return <main className="grid min-h-screen place-items-center px-5">Cargando...</main>;
-  if (!user) return <main className="grid min-h-screen place-items-center px-5"><div className="spotlight max-w-lg rounded-3xl p-8 text-center"><h1 className="show-title text-5xl gold-gradient">Link inválido</h1><p className="mt-3 text-violet-100/70">Pide al admin que te genere un link único.</p></div></main>;
+  if (!state) return <main className="grid min-h-screen place-items-center px-5">{msg || 'Cargando...'}</main>;
 
   const lockedOrder = existing?.order_ids ? existing.order_ids.map(id => contestants.find(c => c.id === id)).filter(Boolean) as Contestant[] : [];
   const list = existing ? lockedOrder : ordered;
@@ -56,7 +80,7 @@ export default function JoinPage({ params }: { params: Promise<{ token: string }
     <a href="/" className="text-sm font-bold text-cyan-200">← Ver leaderboard</a>
     <div className="mt-5 spotlight rounded-[1.75rem] p-5 sm:mt-8 sm:p-8">
       <p className="show-kicker text-[10px] text-yellow-200 sm:text-sm">Link privado</p>
-      <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Hola, {user.name}</h1>
+      <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Hola, {state.user.name}</h1>
       <p className="mt-4 text-sm leading-6 text-violet-100/78 sm:text-base"><b>#1 es quien crees que sale primero.</b> El último número (#{contestants.length || 18}) es quien crees que gana la temporada. En móvil usa los botones ↑ ↓. Solo puedes enviar una vez.</p>
       <div className="mt-5 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>

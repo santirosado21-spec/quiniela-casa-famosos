@@ -11,9 +11,7 @@ Fantasy pool responsive para predecir el orden completo de eliminación de La Ca
 - Admin panel en `/admin`:
   - crear usuarios;
   - copiar links únicos;
-  - sembrar/actualizar cast;
   - capturar eliminaciones manualmente;
-  - reiniciar eliminaciones.
 - Leaderboard en vivo en `/`.
 - Persistencia server-side usando GitHub Contents API (`data/store.json`) para funcionar en Vercel sin base de datos externa.
 
@@ -29,7 +27,9 @@ Ejemplo: si alguien puso a un habitante como 3er eliminado y realmente sale 5to,
 ## Environment variables
 
 ```bash
-ADMIN_PASSWORD=change-me
+ADMIN_USERNAME=melissa
+ADMIN_PASSWORD=change-me-use-a-strong-unique-password
+ADMIN_SESSION_SECRET=change-me-use-at-least-32-random-bytes
 GITHUB_TOKEN=ghp_...
 GITHUB_OWNER=santirosado21-spec
 GITHUB_REPO=quiniela-casa-famosos
@@ -56,13 +56,12 @@ Open:
 ## Admin workflow
 
 1. Open `/admin`.
-2. Enter `ADMIN_PASSWORD`.
-3. Click `Seed/actualizar cast` once.
-4. Create participants.
-5. Copy and send each `/join/[token]` link.
-6. Users submit their elimination order once.
-7. As eliminations happen, enter the official position number next to the eliminated contestant.
-8. The leaderboard recalculates automatically.
+2. Inicia sesión con `ADMIN_USERNAME` y `ADMIN_PASSWORD`. La sesión se guarda en una cookie HttpOnly firmada con `ADMIN_SESSION_SECRET`.
+3. Create participants.
+4. Copy and send each `/join/[token]` link.
+5. Users submit their elimination order once.
+6. As eliminations happen, select the contestant and confirm the displayed official position.
+7. The leaderboard recalculates automatically.
 
 ## Cast note
 
@@ -70,4 +69,4 @@ The initial cast seed is based on public reporting for La Casa de los Famosos M�
 
 ## Production notes
 
-There is no integration with the show's API. Admin updates eliminations manually. The storage strategy is intentionally simple for a private fantasy pool; for high traffic, migrate `lib/store.ts` to Supabase/Postgres and keep the same UI/API contracts.
+There is no integration with the show's API. Admin updates eliminations manually. `ADMIN_PASSWORD` must have at least 16 characters and `ADMIN_SESSION_SECRET` at least 32 bytes; example placeholders are deliberately rejected. Login rate limiting is an additional best-effort in-memory defense compatible with Vercel, not a distributed guarantee across instances. The storage strategy is intentionally simple for a private fantasy pool; for high traffic, migrate `lib/store.ts` to Supabase/Postgres and keep the same UI/API contracts.

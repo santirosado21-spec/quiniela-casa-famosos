@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Trophy, Sparkles, Crown, Activity, Skull, TrendingDown, TrendingUp, UsersRound, CheckCircle2, Target } from 'lucide-react';
-import { buildLeaderboard } from '@/lib/scoring';
+
 
 type Contestant = { id: string; name: string; handle: string; photo_url: string; bio: string; color: string };
-type User = { id: string; name: string; email?: string; token: string };
-type Pick = { user_id: string; order_ids: string[]; submitted_at: string };
 type Elim = { contestant_id: string; position: number; eliminated_at?: string };
-type State = { contestants: Contestant[]; users: User[]; picks: Pick[]; eliminations: Elim[] };
+type Row = { id: string; name: string; score: number; exact: number; submitted: boolean };
+type Leaderboard = { rows: Row[]; winners: Row[]; losers: Row[]; totalUsers: number; totalPicks: number; totalEliminations: number; remainingContestants: number; latestElimination?: Elim };
+type State = { contestants: Contestant[]; eliminations: Elim[]; leaderboard: Leaderboard };
 
 function Photo({ contestant, className }: { contestant: Contestant; className?: string }) {
   return <img src={contestant.photo_url} alt={contestant.name} className={className} loading="lazy" onError={(e) => { e.currentTarget.src = `https://placehold.co/600x750/15102f/f5c96d?text=${encodeURIComponent(contestant.name)}`; }} />;
@@ -43,7 +43,7 @@ export default function Home() {
     fetch('/api/state').then(r => r.json()).then(setState).finally(() => setLoading(false));
   }, []);
 
-  const dashboard = useMemo(() => state ? buildLeaderboard(state) : null, [state]);
+  const dashboard = state?.leaderboard;
   const contestantById = useMemo(() => new Map((state?.contestants || []).map(c => [c.id, c])), [state]);
 
   if (loading) return <main className="grid min-h-screen place-items-center px-5"><div className="spotlight rounded-3xl p-8 text-center font-bold">Cargando quiniela...</div></main>;
@@ -87,8 +87,8 @@ export default function Home() {
             <h2 className="show-title mt-3 text-4xl gold-gradient sm:text-6xl">La quiniela de La Casa de los Famosos</h2>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <Metric icon={TrendingUp} value={dashboard.winners[0]?.user.name || '—'} label="Va ganando" />
-            <Metric icon={TrendingDown} value={dashboard.losers[0]?.user.name || '—'} label="Va perdiendo" />
+            <Metric icon={TrendingUp} value={dashboard.winners[0]?.name || '—'} label="Va ganando" />
+            <Metric icon={TrendingDown} value={dashboard.losers[0]?.name || '—'} label="Va perdiendo" />
             <Metric icon={Activity} value={`${dashboard.totalPicks}/${dashboard.totalUsers}`} label="Picks enviados" />
             <Metric icon={Skull} value={dashboard.totalEliminations} label="Eliminados" />
           </div>
@@ -105,19 +105,19 @@ export default function Home() {
         <MobileMetric icon={Activity} value={`${pickProgress}%`} label="Avance" helper="Porcentaje con quiniela enviada" />
         <MobileMetric icon={Skull} value={`${dashboard.totalEliminations}/${state.contestants.length}`} label="Eliminados" helper={`${dashboard.remainingContestants} habitantes siguen vivos`} />
         <MobileMetric icon={Target} value={`#${nextEliminationPosition}`} label="Siguiente" helper="Próxima posición a actualizar" />
-        <MobileMetric icon={Trophy} value={leader ? leader.score : '—'} label="Puntos líder" helper={leader ? `${leader.user.name} · ${leader.exact} exactas` : `${totalExact} exactas totales`} />
+        <MobileMetric icon={Trophy} value={leader ? leader.score : '—'} label="Puntos líder" helper={leader ? `${leader.name} · ${leader.exact} exactas` : `${totalExact} exactas totales`} />
       </div>
       <div className="grid gap-4 lg:grid-cols-[1.05fr_.95fr]">
         <div className="spotlight overflow-hidden rounded-[1.75rem]">
-          {dashboard.rows.length ? dashboard.rows.map((row, i) => <div key={row.user.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-white/10 px-4 py-4 last:border-0 sm:px-5">
+          {dashboard.rows.length ? dashboard.rows.map((row, i) => <div key={row.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-white/10 px-4 py-4 last:border-0 sm:px-5">
             <div className={`grid h-10 w-10 place-items-center rounded-xl text-sm font-black ${i === 0 ? 'bg-yellow-300 text-slate-950' : i < 3 ? 'bg-emerald-300/15 text-emerald-100' : 'bg-white/8 text-white'}`}>#{i + 1}</div>
-            <div className="min-w-0"><p className="truncate font-black">{row.user.name}</p><p className="truncate text-xs text-violet-100/60 sm:text-sm">{row.submitted ? `${row.exact} exactas · próximo en su lista: ${row.nextRiskName}` : 'Sin picks todavía'}</p></div>
+            <div className="min-w-0"><p className="truncate font-black">{row.name}</p><p className="truncate text-xs text-violet-100/60 sm:text-sm">{row.submitted ? `${row.exact} posiciones exactas` : 'Sin picks todavía'}</p></div>
             <div className="shrink-0 text-right"><p className="text-2xl font-black text-yellow-300">{row.score}</p><p className="text-[10px] uppercase tracking-widest text-violet-100/50">pts</p></div>
           </div>) : <p className="p-8 text-violet-100/70">Cuando entren participantes aparecerá aquí el ranking.</p>}
         </div>
         <div className="grid gap-4">
-          <div className="spotlight rounded-[1.75rem] p-5"><p className="show-kicker text-[10px] text-emerald-100">Top ganadores</p>{dashboard.winners.length ? dashboard.winners.map((r,i)=><div key={r.user.id} className="mt-4 flex items-center justify-between gap-3"><div><p className="font-black">#{i+1} {r.user.name}</p><p className="text-xs text-emerald-50/60">{r.exact} exactas</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
-          <div className="spotlight rounded-[1.75rem] p-5"><p className="show-kicker text-[10px] text-pink-100">Zona de riesgo</p>{dashboard.losers.length ? dashboard.losers.map((r)=><div key={r.user.id} className="mt-4 flex items-center justify-between gap-3"><div><p className="font-black">#{dashboard.rows.findIndex(x=>x.user.id===r.user.id)+1} {r.user.name}</p><p className="text-xs text-pink-50/60">Necesita remontar</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
+          <div className="spotlight rounded-[1.75rem] p-5"><p className="show-kicker text-[10px] text-emerald-100">Top ganadores</p>{dashboard.winners.length ? dashboard.winners.map((r,i)=><div key={r.id} className="mt-4 flex items-center justify-between gap-3"><div><p className="font-black">#{i+1} {r.name}</p><p className="text-xs text-emerald-50/60">{r.exact} exactas</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
+          <div className="spotlight rounded-[1.75rem] p-5"><p className="show-kicker text-[10px] text-pink-100">Zona de riesgo</p>{dashboard.losers.length ? dashboard.losers.map((r)=><div key={r.id} className="mt-4 flex items-center justify-between gap-3"><div><p className="font-black">#{dashboard.rows.findIndex(x=>x.id===r.id)+1} {r.name}</p><p className="text-xs text-pink-50/60">Necesita remontar</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
         </div>
       </div>
     </section>

@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { GripVertical, Lock, Mail, UserRound } from 'lucide-react';
+import { GripVertical, Mail, UserRound } from 'lucide-react';
 
 type Contestant = { id: string; name: string; handle: string; photo_url: string; bio: string };
-type User = { id: string; name: string; email?: string; token: string };
-type Pick = { user_id: string; order_ids: string[] };
-type State = { contestants: Contestant[]; users: User[]; picks: Pick[] };
+type State = { contestants: Contestant[] };
 
 function Photo({ contestant, className }: { contestant: Contestant; className?: string }) {
   return <img src={contestant.photo_url} alt={contestant.name} className={className} loading="lazy" onError={(e) => { e.currentTarget.src = `https://placehold.co/300x300/15102f/f5c96d?text=${encodeURIComponent(contestant.name)}`; }} />;
@@ -33,14 +31,9 @@ export default function PlayPage() {
   useEffect(() => { load(); }, []);
 
   const contestants = useMemo(() => state?.contestants ?? [], [state]);
-  const normalizedEmail = email.trim().toLowerCase();
-  const user = state?.users.find(u => u.email?.toLowerCase() === normalizedEmail);
-  const existing = user ? state?.picks.find(p => p.user_id === user.id) : undefined;
-  const displayOrder = existing?.order_ids || order;
-  const ordered = displayOrder.map(id => contestants.find(c => c.id === id)).filter(Boolean) as Contestant[];
+  const ordered = order.map(id => contestants.find(c => c.id === id)).filter(Boolean) as Contestant[];
 
   function move(i: number, dir: -1 | 1) {
-    if (existing) return;
     const next = [...order];
     const j = i + dir;
     if (j < 0 || j >= next.length) return;
@@ -49,21 +42,34 @@ export default function PlayPage() {
   }
 
   async function submit() {
-    setSaving(true); setMsg('');
-    const res = await fetch('/api/picks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, orderIds: order }),
-    });
-    const data = await res.json();
-    setSubmittedEmail(res.ok ? email.trim() : '');
-    setMsg(res.ok ? 'Quiniela enviada. Ahora paga tu entrada en Money Pool para quedar confirmado.' : data.error);
-    await load();
-    setSaving(false);
+    setSaving(true);
+    setMsg('');
+    setSubmittedEmail('');
+
+    try {
+      const res = await fetch('/api/picks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, orderIds: order }),
+      });
+      const data: { error?: string } = await res.json();
+
+      if (!res.ok) {
+        setMsg(data.error || 'No se pudo enviar la quiniela. Inténtalo de nuevo.');
+        return;
+      }
+
+      setSubmittedEmail(email.trim());
+      setMsg('Quiniela enviada. Ahora paga tu entrada en Money Pool para quedar confirmado.');
+    } catch {
+      setMsg('No se pudo completar el envío. Revisa tu conexión e inténtalo de nuevo.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   const hasContactInfo = name.trim().length >= 2 && /\S+@\S+\.\S+/.test(email);
-  const canSubmit = hasContactInfo && order.length === contestants.length && !existing;
+  const canSubmit = hasContactInfo && order.length === contestants.length;
 
   if (!state) return <main className="grid min-h-screen place-items-center px-5">Cargando...</main>;
 
@@ -82,7 +88,6 @@ export default function PlayPage() {
           <label className={inputShell}><Mail className="h-4 w-4 shrink-0 text-yellow-200 sm:h-5 sm:w-5"/><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="tu@correo.com" type="email" className={inputClass} /></label>
         </div>
       </div>
-      {existing && <div className="mt-4 flex items-center gap-2 rounded-2xl bg-emerald-400/10 p-3 text-xs font-bold text-emerald-100 sm:text-sm"><Lock className="h-4 w-4"/> Este correo ya envió picks. Abajo puedes verlos bloqueados.</div>}
       <div className="mt-4 rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-3 sm:p-4">
         <p className="text-xs font-black uppercase tracking-[.2em] text-yellow-100">Pago Money Pool</p>
         <p className="mt-2 text-xs leading-5 text-violet-100/75 sm:text-sm sm:leading-6">La entrada es de <b>$500 pesos</b>. Paga en Money Pool y manda tu comprobante a <b>melissamolch@gmail.com</b>.</p>
@@ -90,7 +95,7 @@ export default function PlayPage() {
           Pagar en Money Pool
         </a>
       </div>
-      {submittedEmail && !existing && <p className="mt-2 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
+      {submittedEmail && <p className="mt-2 text-xs text-violet-100/60">Último correo usado: {submittedEmail}</p>}
     </section>
 
     <section className="mt-4 grid gap-2 sm:mt-6 sm:gap-2.5">
@@ -104,18 +109,18 @@ export default function PlayPage() {
         <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-yellow-300 text-xs font-black text-slate-950 sm:h-9 sm:w-9 sm:rounded-xl sm:text-sm">{i + 1}</div>
         <Photo contestant={c} className="h-10 w-10 shrink-0 rounded-lg object-cover sm:h-12 sm:w-12 sm:rounded-xl" />
         <div className="min-w-0 flex-1"><h2 className="truncate text-sm font-black sm:text-base">{c.name}</h2><p className="truncate text-[11px] text-violet-100/60 sm:text-xs">{c.handle}</p></div>
-        {!existing && <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           <button aria-label={`Subir a ${c.name}`} onClick={() => move(i,-1)} className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-sm font-black active:scale-95 disabled:opacity-30 sm:h-10 sm:w-10" disabled={i === 0}>↑</button>
           <button aria-label={`Bajar a ${c.name}`} onClick={() => move(i,1)} className="grid h-9 w-9 place-items-center rounded-xl border border-white/15 bg-white/5 text-sm font-black active:scale-95 disabled:opacity-30 sm:h-10 sm:w-10" disabled={i === ordered.length - 1}>↓</button>
           <GripVertical className="hidden text-white/30 sm:block"/>
-        </div>}
+        </div>
       </div>)}
     </section>
 
-    {!existing && <div className="mt-4 rounded-[1.35rem] border border-white/10 bg-[#070613]/88 p-3 shadow-[0_-14px_40px_rgba(7,6,19,.5)] sm:bg-transparent sm:p-0 sm:shadow-none">
+    <div className="mt-4 rounded-[1.35rem] border border-white/10 bg-[#070613]/88 p-3 shadow-[0_-14px_40px_rgba(7,6,19,.5)] sm:bg-transparent sm:p-0 sm:shadow-none">
       <button disabled={saving || !canSubmit} onClick={submit} className="w-full rounded-2xl bg-yellow-300 px-6 py-3.5 font-black text-slate-950 shadow-[0_0_30px_rgba(245,201,109,.25)] disabled:opacity-50">{saving ? 'Guardando...' : 'Enviar quiniela y bloquear'}</button>
       {!canSubmit && <p className="mt-2 text-center text-xs text-violet-100/60">Completa nombre y correo válido para enviar.</p>}
-    </div>}
+    </div>
     {msg && <div className="mt-4 rounded-3xl border border-emerald-300/25 bg-emerald-300/10 p-4 text-center">
       <p className="text-sm font-black text-emerald-100">{msg}</p>
       {submittedEmail && <>

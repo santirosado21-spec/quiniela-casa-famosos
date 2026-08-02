@@ -1,113 +1,152 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Copy, Plus, RefreshCw, ShieldCheck, Skull, Trophy, TrendingDown, TrendingUp } from 'lucide-react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { Copy, LogOut, Plus, ShieldCheck } from 'lucide-react';
 import { buildLeaderboard } from '@/lib/scoring';
 
 type Contestant = { id: string; name: string; handle?: string; photo_url: string };
 type User = { id: string; name: string; email?: string; token: string; created_at?: string };
 type Pick = { user_id: string; order_ids: string[]; submitted_at?: string };
-type Elim = { contestant_id: string; position: number; eliminated_at?: string };
-type State = { contestants: Contestant[]; users: User[]; picks: Pick[]; eliminations: Elim[] };
-
-function Stat({ label, value, icon: Icon }: { label: string; value: string | number; icon: typeof Trophy }) {
-  return <div className="rounded-2xl border border-white/10 bg-white/[.055] p-4">
-    <div className="mb-3 grid h-9 w-9 place-items-center rounded-xl bg-yellow-300/15 text-yellow-200"><Icon className="h-4 w-4" /></div>
-    <p className="text-2xl font-black text-white">{value}</p>
-    <p className="text-xs font-bold uppercase tracking-[.18em] text-violet-100/45">{label}</p>
-  </div>;
-}
+type Elimination = { contestant_id: string; position: number; eliminated_at?: string };
+type State = { contestants: Contestant[]; users: User[]; picks: Pick[]; eliminations: Elimination[] };
 
 export default function AdminPage() {
- const [username,setUsername]=useState('');
- const [password,setPassword]=useState('');
- const [name,setName]=useState('');
- const [selected,setSelected]=useState('');
- const [state,setState]=useState<State|null>(null);
- const [msg,setMsg]=useState('');
- const load=()=>fetch('/api/state').then(r=>r.json()).then((next: State)=>{ setState(next); setSelected((prev)=> prev || next.contestants.find(c=>!next.eliminations.some(e=>e.contestant_id===c.id))?.id || ''); });
- useEffect(()=>{load()},[]);
- async function action(body: Record<string, unknown>) { setMsg(''); const res=await fetch('/api/admin',{method:'POST',headers:{'Content-Type':'application/json','x-admin-username':username,'x-admin-password':password},body:JSON.stringify(body)}); const data=await res.json(); setMsg(res.ok?'OK':data.error); await load(); return data; }
- const base= typeof window==='undefined'?'':window.location.origin;
- const dashboard = useMemo(()=> state ? buildLeaderboard(state) : null, [state]);
- const contestantById = useMemo(()=> new Map((state?.contestants || []).map(c=>[c.id,c])), [state]);
- const nextPosition = (state?.eliminations.length || 0) + 1;
- const available = state?.contestants.filter(c=>!state.eliminations.some(e=>e.contestant_id===c.id)) || [];
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [state, setState] = useState<State | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [restoring, setRestoring] = useState(true);
+  const [restoreError, setRestoreError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+  const [newName, setNewName] = useState('');
+  const [selected, setSelected] = useState('');
 
- return <main className="mobile-shell mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-10">
-  <a href="/" className="text-sm font-bold text-cyan-200">← Home</a>
-  <div className="mt-5 spotlight rounded-[1.75rem] p-5 sm:mt-8 sm:p-6">
-    <div className="grid gap-5 lg:grid-cols-[1fr_360px] lg:items-end">
-      <div>
-        <p className="show-kicker text-[10px] text-yellow-200 sm:text-sm">Admin panel</p>
-        <h1 className="show-title mt-2 text-6xl gold-gradient sm:text-8xl">Control de quiniela</h1>
-        <p className="mt-3 text-sm text-violet-100/70 sm:text-base">Registra al eliminado de cada domingo y el sistema recalcula automáticamente ganadores y perdedores.</p>
-      </div>
-      <div className="grid gap-3">
-        <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="Usuario admin" autoComplete="username" className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-4 outline-none focus:border-cyan-200" />
-        <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Contraseña admin" type="password" autoComplete="current-password" className="w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-4 outline-none focus:border-cyan-200" />
-      </div>
-    </div>
-  </div>
+  async function loadAdminState() {
+    const response = await fetch('/api/admin/state', { cache: 'no-store' });
+    if (!response.ok) {
+      if (response.status === 401) setState(null);
+      throw new Error(response.status === 401 ? 'unauthorized' : 'No se pudo consultar la sesión.');
+    }
+    const next: State = await response.json();
+    setState(next);
+    const nextAvailable = next.contestants.filter((contestant) => !next.eliminations.some((entry) => entry.contestant_id === contestant.id));
+    setSelected((current) => nextAvailable.some((contestant) => contestant.id === current) ? current : nextAvailable[0]?.id || '');
+    return true;
+  }
 
-  <section className="mt-6 spotlight rounded-3xl p-4 sm:p-5">
-    <div className="flex items-start justify-between gap-4">
-      <div><p className="show-kicker text-[10px] text-pink-100">Domingo #{nextPosition}</p><h2 className="show-title text-4xl gold-gradient sm:text-5xl">Registrar eliminado</h2></div>
-    </div>
-    <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
-      <select value={selected} onChange={e=>setSelected(e.target.value)} className="min-w-0 rounded-2xl border border-white/15 bg-black/40 px-4 py-4 font-bold outline-none focus:border-yellow-200">
-        {available.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
-      </select>
-      <button disabled={!selected} onClick={()=>action({action:'recordSundayElimination', contestantId:selected})} className="rounded-2xl bg-yellow-300 px-5 py-4 font-black text-slate-950 disabled:opacity-50">Guardar domingo</button>
-    </div>
-  </section>
+  useEffect(() => {
+    void (async () => {
+      try {
+        await loadAdminState();
+      } catch (error) {
+        if (error instanceof Error && error.message !== 'unauthorized') setRestoreError(error.message);
+      } finally {
+        setRestoring(false);
+      }
+    })();
+  }, []);
 
-  {dashboard && <section className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-    <Stat icon={ShieldCheck} value={`${dashboard.totalPicks}/${dashboard.totalUsers}`} label="Picks registrados" />
-    <Stat icon={Skull} value={dashboard.totalEliminations} label="Domingos jugados" />
-    <Stat icon={TrendingUp} value={dashboard.winners[0]?.user.name || '—'} label="Va ganando" />
-    <Stat icon={TrendingDown} value={dashboard.losers[0]?.user.name || '—'} label="Va perdiendo" />
-  </section>}
+  async function login(event: FormEvent) {
+    event.preventDefault();
+    setChecking(true);
+    setMessage('');
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'No se pudo iniciar sesión.');
+      setPassword('');
+      await loadAdminState();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'No se pudo iniciar sesión.');
+    } finally {
+      setChecking(false);
+    }
+  }
 
-  <section className="mt-6 grid gap-6 xl:grid-cols-[.95fr_1.05fr]">
-    <div className="space-y-6">
-      <div className="spotlight rounded-3xl p-4 sm:p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div><p className="show-kicker text-[10px] text-pink-100">Domingo #{nextPosition}</p><h2 className="show-title text-4xl gold-gradient sm:text-5xl">Registrar eliminado</h2></div>
-          <button className="rounded-xl border border-white/15 p-3" onClick={()=>action({action:'resetEliminations'})} title="Reset eliminaciones"><RefreshCw className="h-4 w-4"/></button>
-        </div>
-        <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
-          <select value={selected} onChange={e=>setSelected(e.target.value)} className="min-w-0 rounded-2xl border border-white/15 bg-black/40 px-4 py-4 font-bold outline-none focus:border-yellow-200">
-            {available.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-          <button disabled={!selected} onClick={()=>action({action:'recordSundayElimination', contestantId:selected})} className="rounded-2xl bg-yellow-300 px-5 py-4 font-black text-slate-950 disabled:opacity-50">Guardar domingo</button>
-        </div>
-        <button onClick={()=>action({action:'seedContestants'})} className="mt-3 rounded-xl border border-cyan-200/40 px-4 py-3 text-sm font-bold text-cyan-100">Seed/actualizar cast</button>
-        <div className="mt-5 space-y-2">
-          {state?.eliminations.sort((a,b)=>a.position-b.position).map(e=>{const c=contestantById.get(e.contestant_id); return <div key={`${e.contestant_id}-${e.position}`} className="flex items-center gap-3 rounded-2xl bg-white/6 p-2.5"><div className="grid h-9 w-9 rounded-xl bg-pink-400/15 place-items-center text-sm font-black text-pink-100">#{e.position}</div>{c && <img src={c.photo_url} alt={c.name} className="h-10 w-10 rounded-xl object-cover"/>}<div className="min-w-0 flex-1"><p className="truncate font-black">{c?.name || e.contestant_id}</p><p className="text-xs text-violet-100/50">{e.eliminated_at ? new Date(e.eliminated_at).toLocaleDateString('es-MX') : 'Registrado'}</p></div></div>})}
-          {!state?.eliminations.length && <p className="rounded-2xl bg-white/6 p-4 text-sm text-violet-100/60">Aún no hay eliminados. El primer domingo será posición #1.</p>}
-        </div>
-      </div>
+  async function logout() {
+    await fetch('/api/admin/logout', { method: 'POST' });
+    setState(null);
+    setUsername('');
+    setPassword('');
+    setMessage('Sesión cerrada.');
+  }
 
-      <div className="spotlight rounded-3xl p-4 sm:p-5">
-        <h2 className="show-title text-4xl gold-gradient sm:text-5xl">Usuarios</h2>
-        <div className="mt-4 flex gap-2"><input value={name} onChange={e=>setName(e.target.value)} placeholder="Nombre del participante" className="min-w-0 flex-1 rounded-xl border border-white/15 bg-black/30 px-4 py-3"/><button onClick={()=> action({action:'createUser', name}).then(()=>setName(''))} className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-yellow-300 font-black text-slate-950"><Plus/></button></div>
-        <div className="mt-4 space-y-3">{state?.users.map(u=> <div key={u.id} className="rounded-2xl bg-white/6 p-3"><div className="flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate font-bold">{u.name}</p><p className="text-xs text-violet-100/50">{u.email || 'link único'} · {state.picks.some(p=>p.user_id===u.id)?'Enviado':'Pendiente'}</p></div><button onClick={()=>navigator.clipboard.writeText(`${base}/join/${u.token}`)} className="rounded-xl border border-white/15 p-3" aria-label="Copiar link"><Copy className="h-4 w-4"/></button></div><code className="mt-2 block overflow-x-auto rounded-xl bg-black/30 p-2 text-xs text-cyan-100">{base}/join/{u.token}</code></div>)}</div>
-      </div>
-    </div>
+  async function action(body: Record<string, unknown>) {
+    setMessage('');
+    setSaving(true);
+    try {
+      const response = await fetch('/api/admin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const data = await response.json();
+      if (response.status === 401) { setState(null); setMessage('Tu sesión expiró. Inicia sesión de nuevo.'); return false; }
+      if (!response.ok) throw new Error(data.error || 'No se pudo guardar.');
+      await loadAdminState();
+      setMessage('Cambios guardados.');
+      return true;
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'No se pudo guardar.');
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  }
 
-    <div className="spotlight rounded-3xl p-4 sm:p-5">
-      <div className="mb-4 flex items-center gap-3"><Trophy className="text-yellow-300"/><h2 className="show-title text-4xl gold-gradient sm:text-5xl">Dashboard vivo</h2></div>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-        <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/8 p-4"><p className="show-kicker text-[10px] text-emerald-100">Ganando</p>{dashboard?.winners.length ? dashboard.winners.map((r,i)=><div key={r.user.id} className="mt-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate font-black">#{i+1} {r.user.name}</p><p className="text-xs text-emerald-50/60">{r.exact} exactas · próximo riesgo: {r.nextRiskName}</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
-        <div className="rounded-2xl border border-pink-300/20 bg-pink-300/8 p-4"><p className="show-kicker text-[10px] text-pink-100">Perdiendo</p>{dashboard?.losers.length ? dashboard.losers.map((r,i)=><div key={r.user.id} className="mt-3 flex items-center justify-between gap-3"><div className="min-w-0"><p className="truncate font-black">#{dashboard.rows.findIndex(x=>x.user.id===r.user.id)+1} {r.user.name}</p><p className="text-xs text-pink-50/60">{r.exact} exactas · próximo riesgo: {r.nextRiskName}</p></div><p className="text-xl font-black text-yellow-200">{r.score}</p></div>) : <p className="mt-3 text-sm text-violet-100/60">Sin picks enviados.</p>}</div>
-      </div>
-      <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
-        {dashboard?.rows.map((row,i)=><div key={row.user.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 border-b border-white/10 bg-white/[.035] px-3 py-3 last:border-0"><div className="grid h-8 w-8 place-items-center rounded-lg bg-white/8 text-xs font-black">#{i+1}</div><div className="min-w-0"><p className="truncate font-black">{row.user.name}</p><p className="truncate text-xs text-violet-100/50">{row.submitted ? `${row.exact} exactas · ${row.nextRiskName}` : 'Sin picks'}</p></div><div className="text-right"><p className="text-lg font-black text-yellow-300">{row.score}</p><p className="text-[10px] uppercase tracking-widest text-violet-100/45">pts</p></div></div>)}
-        {!dashboard?.rows.length && <p className="p-6 text-violet-100/60">Aún no hay participantes.</p>}
-      </div>
-    </div>
-  </section>
-  {msg&&<p className="mt-5 text-center font-bold text-cyan-100">{msg}</p>}
- </main>;
+  async function createUser() {
+    if (await action({ action: 'createUser', name: newName })) setNewName('');
+  }
+
+  const contestantById = useMemo(() => new Map((state?.contestants || []).map((c) => [c.id, c])), [state]);
+  const dashboard = useMemo(() => state ? buildLeaderboard(state) : null, [state]);
+  const available = state?.contestants.filter((c) => !state.eliminations.some((e) => e.contestant_id === c.id)) || [];
+  const nextPosition = Math.max(0, ...(state?.eliminations.map((entry) => entry.position) || [])) + 1;
+  const base = typeof window === 'undefined' ? '' : window.location.origin;
+
+  if (restoring) return <main className="grid min-h-screen place-items-center px-5"><p className="font-bold text-violet-100">Restaurando sesión…</p></main>;
+  if (restoreError && !state) return <main className="grid min-h-screen place-items-center px-5"><div className="spotlight rounded-3xl p-6 text-center"><p className="font-bold text-pink-100">{restoreError}</p><button onClick={() => window.location.reload()} className="mt-4 rounded-xl bg-yellow-300 px-4 py-3 font-black text-slate-950">Reintentar</button></div></main>;
+
+  if (!state) return <main className="mx-auto grid min-h-screen max-w-lg place-items-center px-5">
+    <form onSubmit={login} className="spotlight w-full rounded-3xl p-6 sm:p-8">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-yellow-300 text-slate-950"><ShieldCheck /></div>
+      <h1 className="show-title mt-5 text-center text-6xl gold-gradient">Administración</h1>
+      <p className="mt-3 text-center text-sm text-violet-100/70">Inicia sesión para consultar los picks privados.</p>
+      <label className="mt-6 block text-sm font-bold">Usuario<input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" className="mt-2 w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-3 outline-none" /></label>
+      <label className="mt-4 block text-sm font-bold">Contraseña<input value={password} onChange={(e) => setPassword(e.target.value)} type="password" autoComplete="current-password" className="mt-2 w-full rounded-2xl border border-white/15 bg-black/30 px-4 py-3 outline-none" /></label>
+      <button disabled={checking} className="mt-6 w-full rounded-2xl bg-yellow-300 px-5 py-4 font-black text-slate-950 disabled:opacity-60">{checking ? 'Verificando…' : 'Iniciar sesión'}</button>
+      {message && <p className="mt-4 text-center text-sm font-bold text-pink-100">{message}</p>}
+      <a href="/" className="mt-5 block text-center text-sm font-bold text-cyan-200">← Volver al inicio</a>
+    </form>
+  </main>;
+
+  return <main className="mobile-shell mx-auto max-w-7xl px-4 py-6 sm:px-5 sm:py-10">
+    <header className="spotlight flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+      <div><p className="show-kicker text-xs text-yellow-200">Sesión privada</p><h1 className="show-title text-6xl gold-gradient">Panel de Melissa</h1><p className="mt-2 text-sm text-violet-100/70">Picks completos y controles de la quiniela.</p></div>
+      <button onClick={logout} className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 px-5 py-3 font-bold"><LogOut className="h-4 w-4" /> Cerrar sesión</button>
+    </header>
+
+    <section className="mt-6 grid gap-3 sm:grid-cols-3">
+      <div className="spotlight rounded-2xl p-4"><p className="text-2xl font-black">{state.users.length}</p><p className="text-xs text-violet-100/60">Participantes</p></div>
+      <div className="spotlight rounded-2xl p-4"><p className="text-2xl font-black">{state.picks.length}</p><p className="text-xs text-violet-100/60">Picks enviados</p></div>
+      <div className="spotlight rounded-2xl p-4"><p className="text-2xl font-black">{dashboard?.winners[0]?.user.name || '—'}</p><p className="text-xs text-violet-100/60">Va ganando</p></div>
+    </section>
+
+    <section className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="spotlight rounded-3xl p-5"><h2 className="show-title text-4xl gold-gradient">Registrar eliminación</h2><div className="mt-4 flex gap-2"><select value={selected} onChange={(e) => setSelected(e.target.value)} className="min-w-0 flex-1 rounded-xl border border-white/15 bg-black/40 px-4 py-3">{available.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select><button disabled={!selected || saving} onClick={() => { const contestant = available.find((candidate) => candidate.id === selected); if (contestant && window.confirm(`¿Confirmas registrar a ${contestant.name} en la posición #${nextPosition}?`)) void action({ action: 'recordSundayElimination', contestantId: selected }); }} className="rounded-xl bg-yellow-300 px-4 font-black text-slate-950 disabled:opacity-50">Guardar #{nextPosition}</button></div></div>
+      <div className="spotlight rounded-3xl p-5"><h2 className="show-title text-4xl gold-gradient">Crear participante</h2><div className="mt-4 flex gap-2"><input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Nombre" className="min-w-0 flex-1 rounded-xl border border-white/15 bg-black/30 px-4 py-3"/><button disabled={saving} onClick={() => void createUser()} className="grid h-12 w-12 place-items-center rounded-xl bg-yellow-300 text-slate-950 disabled:opacity-50"><Plus /></button></div></div>
+    </section>
+
+    <section className="mt-6"><h2 className="show-title text-5xl gold-gradient">Picks por participante</h2><p className="mt-2 text-sm text-violet-100/65">La posición #1 es el primer eliminado; la última es el ganador.</p>
+      <div className="mt-4 grid gap-5 xl:grid-cols-2">{state.users.map((user) => {
+        const pick = state.picks.find((candidate) => candidate.user_id === user.id);
+        return <article key={user.id} className="spotlight rounded-3xl p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3"><div><h3 className="text-xl font-black">{user.name}</h3><p className="text-xs text-violet-100/60">{user.email || 'Sin correo'} · {pick ? 'Enviado' : 'Pendiente'}</p></div><button onClick={() => navigator.clipboard.writeText(`${base}/join/${user.token}`)} className="rounded-xl border border-white/15 p-3" aria-label={`Copiar link de ${user.name}`}><Copy className="h-4 w-4"/></button></div>
+          {pick ? <ol className="mt-4 grid gap-2">{pick.order_ids.map((id, index) => { const contestant = contestantById.get(id); return <li key={`${id}-${index}`} className="flex items-center gap-3 rounded-2xl bg-white/[.055] p-2"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-yellow-300 font-black text-slate-950">{index + 1}</span>{contestant && <img src={contestant.photo_url} alt={contestant.name} className="h-11 w-11 rounded-xl object-cover"/>}<div><p className="font-black">{contestant?.name || id}</p><p className="text-xs text-violet-100/50">{contestant?.handle}</p></div></li>; })}</ol> : <p className="mt-4 rounded-2xl bg-white/[.055] p-4 text-sm text-violet-100/60">Todavía no envía sus picks.</p>}
+        </article>;
+      })}</div>
+    </section>
+    {message && <p className="mt-6 text-center font-bold text-cyan-100">{message}</p>}
+  </main>;
 }

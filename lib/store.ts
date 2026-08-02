@@ -14,6 +14,13 @@ const token = process.env.GITHUB_TOKEN;
 const initialState: PoolState = { contestants, users: [], picks: [], eliminations: [] };
 let memoryState: PoolState = initialState;
 
+class GitHubApiError extends Error {
+  constructor(public readonly status: number, body: string) {
+    super(`GitHub API ${status}: ${body}`);
+    this.name = 'GitHubApiError';
+  }
+}
+
 async function github<T>(url: string, init: RequestInit = {}): Promise<T> {
   if (!token) throw new Error('GITHUB_TOKEN no configurado');
   const res = await fetch(url, {
@@ -26,7 +33,7 @@ async function github<T>(url: string, init: RequestInit = {}): Promise<T> {
     },
     cache: 'no-store',
   });
-  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+  if (!res.ok) throw new GitHubApiError(res.status, await res.text());
   return res.json() as Promise<T>;
 }
 
@@ -59,14 +66,48 @@ export async function getState() {
   state.eliminations ||= [];
   return state;
 }
-export async function updateState(mutator: (state: PoolState) => PoolState | void, message?: string) {
-  const { state, sha } = await readRemote();
-  if (!state.contestants?.length) state.contestants = contestants;
-  state.users ||= [];
-  state.picks ||= [];
-  state.eliminations ||= [];
+
+type ReadState = () => Promise<{ state: PoolState; sha?: string }>;
+type WriteState = (state: PoolState, sha?: string, message?: string) => Promise<void>;
+
+function cloneAndNormalize(state: PoolState): PoolState {
   const cloned: PoolState = JSON.parse(JSON.stringify(state));
-  const next = mutator(cloned) || cloned;
-  await writeRemote(next, sha, message);
-  return next;
+  if (!cloned.contestants?.length) cloned.contestants = contestants;
+  cloned.users ||= [];
+  cloned.picks ||= [];
+  cloned.eliminations ||= [];
+  return cloned;
+}
+
+function isConflict(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'status' in error && error.status === 409;
+}
+
+export async function updateStateWithRetry(
+  read: ReadState,
+  write: WriteState,
+  mutator: (state: PoolState) => PoolState | void,
+  message?: string,
+  maxAttempts = 3,
+) {
+  const attempts = Number.isFinite(maxAttempts) ? Math.max(1, Math.floor(maxAttempts)) : 3;
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    const { state, sha } = await read();
+    const cloned = cloneAndNormalize(state);
+    const next = mutator(cloned) || cloned;
+
+    try {
+      await write(next, sha, message);
+      return next;
+    } catch (error) {
+      if (!isConflict(error) || attempt === attempts) throw error;
+    }
+  }
+
+  throw new Error('No fue posible actualizar el estado');
+}
+
+export async function updateState(mutator: (state: PoolState) => PoolState | void, message?: string) {
+  return updateStateWithRetry(readRemote, writeRemote, mutator, message);
 }
