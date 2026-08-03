@@ -273,5 +273,11 @@
       "submitted_at": "2026-08-02T04:21:08.418Z"
     }
   ],
-  "eliminations": []
+  "eliminations": [
+    {
+      "contestant_id": "mariana-ochoa",
+      "position": 1,
+      "eliminated_at": "2026-08-03T05:04:21.452Z"
+    }
+  ]
 }
